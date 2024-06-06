@@ -1,4 +1,5 @@
 from result_builder import build_results
+from tqdm import tqdm
 import numpy as np
 import itertools
 import random
@@ -54,6 +55,49 @@ def calculate_similarity(dev1, dev2, dev1_path, dev2_path):
 
     return similarity
 
+# def main():
+#     iterations = 10000
+#     file_path = r'/home/iotresearch/saad/FastTextExp/thesis_b' 
+#     if not os.path.exists(file_path):
+#         file_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T2\ELEC 4952 - Thesis B\python\thesis_b'
+
+#     device_list = ['nature_remo.json', 'xiaomi_mijia_led.json', 'irobot_roomba.json', 'planex_smacam_pantilt.json', 'jvc_kenwood_hdtv_ip_camera.json']
+#     total_combinations = generate_device_combinations(device_list)
+#     embedder = ["fast_text_embeddings", "bert_embeddings"]
+#     seen_option = ["seen", "unseen"]
+
+#     device_indices = {dev: i for i, dev in enumerate(device_list)}
+#     print(device_indices)
+
+#     for embed_option in embedder:
+
+#         for dev1, dev2 in total_combinations:
+
+#             for seen_data_option in seen_option:
+
+#                 similarity_score_list = []
+#                 mu_device_seen = sigma_device_seen = mu_device_unseen = sigma_device_unseen = 0
+
+#                 for _ in range(iterations):
+#                     file1 = os.path.join(file_path, embed_option, dev1 + "_" + seen_data_option + "_" + embed_option + ".txt")
+#                     file2 = os.path.join(file_path, embed_option, dev1 + "_" + seen_data_option + "_" + embed_option + ".txt")
+#                     similarity_score = calculate_similarity(dev1, dev2, file1, file2)
+#                     similarity_score_list.append(similarity_score)
+
+#                 if seen_data_option == "seen":
+#                     mu_device_seen = np.mean(similarity_score_list)
+#                     sigma_device_seen = np.std(similarity_score_list)
+
+#                 if seen_data_option == "unseen":
+#                     mu_device_unseen = np.mean(similarity_score_list)
+#                     sigma_device_unseen = np.std(similarity_score_list)
+
+#                 build_results(device_indices, dev1, dev2, mu_device_seen, sigma_device_seen, mu_device_unseen, sigma_device_unseen, embed_option)
+
+# if __name__ == "__main__":
+#     main()
+
+
 def main():
     iterations = 10000
     file_path = r'/home/iotresearch/saad/FastTextExp/thesis_b' 
@@ -68,16 +112,17 @@ def main():
     device_indices = {dev: i for i, dev in enumerate(device_list)}
     print(device_indices)
 
-    for embed_option in embedder:
+    for embed_option in tqdm(embedder, desc="Embedding Options"):  # Wrap outer loop with tqdm
 
-        for dev1, dev2 in total_combinations:
+        for dev1, dev2 in tqdm(total_combinations, desc="Device Combinations", leave=False):  # Wrap middle loop with tqdm
+            
+            mu_device_seen = sigma_device_seen = mu_device_unseen = sigma_device_unseen = 0
 
-            for seen_data_option in seen_option:
+            for seen_data_option in tqdm(seen_option, desc="Seen/Unseen Options", leave=False):  # Wrap inner loop with tqdm
 
                 similarity_score_list = []
-                mu_device_seen = sigma_device_seen = mu_device_unseen = sigma_device_unseen = 0
 
-                for _ in range(iterations):
+                for _ in tqdm(range(iterations), desc="Iterations", leave=False):  # Wrap innermost loop with tqdm
                     file1 = os.path.join(file_path, embed_option, dev1 + "_" + seen_data_option + "_" + embed_option + ".txt")
                     file2 = os.path.join(file_path, embed_option, dev1 + "_" + seen_data_option + "_" + embed_option + ".txt")
                     similarity_score = calculate_similarity(dev1, dev2, file1, file2)
@@ -91,7 +136,7 @@ def main():
                     mu_device_unseen = np.mean(similarity_score_list)
                     sigma_device_unseen = np.std(similarity_score_list)
 
-                build_results(device_indices, dev1, dev2, mu_device_seen, sigma_device_seen, mu_device_unseen, sigma_device_unseen, embed_option)
+            build_results(device_indices, dev1, dev2, mu_device_seen, sigma_device_seen, mu_device_unseen, sigma_device_unseen, embed_option)
 
 if __name__ == "__main__":
     main()
