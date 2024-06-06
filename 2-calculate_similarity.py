@@ -56,7 +56,7 @@ def calculate_similarity(dev1, dev2, dev1_path, dev2_path):
 
 def main():
     iterations = 10000
-    file_path = r'/home/iotresearch/saad/data/KDDI-IoT-2019/ipfixx' 
+    file_path = r'/home/iotresearch/saad/FastTextExp/thesis_b' 
     if not os.path.exists(file_path):
         file_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T2\ELEC 4952 - Thesis B\python\thesis_b'
 
@@ -75,6 +75,7 @@ def main():
             for seen_data_option in seen_option:
 
                 similarity_score_list = []
+                mu_device_seen = sigma_device_seen = mu_device_unseen = sigma_device_unseen = 0
 
                 for _ in range(iterations):
                     file1 = os.path.join(file_path, "fast_text_embeddings", dev1 + "_" + seen_data_option + "_" + "fast_text_embeddings" + ".txt")
@@ -82,11 +83,11 @@ def main():
                     similarity_score = calculate_similarity(dev1, dev2, file1, file2)
                     similarity_score_list.append(similarity_score)
 
-                if seen_option == "seen":
+                if seen_data_option == "seen":
                     mu_device_seen = np.mean(similarity_score_list)
                     sigma_device_seen = np.std(similarity_score_list)
 
-                if seen_option == "unseen":
+                if seen_data_option == "unseen":
                     mu_device_unseen = np.mean(similarity_score_list)
                     sigma_device_unseen = np.std(similarity_score_list)
 
