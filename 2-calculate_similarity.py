@@ -78,8 +78,8 @@ def main():
                 mu_device_seen = sigma_device_seen = mu_device_unseen = sigma_device_unseen = 0
 
                 for _ in range(iterations):
-                    file1 = os.path.join(file_path, "fast_text_embeddings", dev1 + "_" + seen_data_option + "_" + "fast_text_embeddings" + ".txt")
-                    file2 = os.path.join(file_path, "fast_text_embeddings", dev1 + "_" + seen_data_option + "_" + "fast_text_embeddings" + ".txt")
+                    file1 = os.path.join(file_path, embed_option, dev1 + "_" + seen_data_option + "_" + embed_option + ".txt")
+                    file2 = os.path.join(file_path, embed_option, dev1 + "_" + seen_data_option + "_" + embed_option + ".txt")
                     similarity_score = calculate_similarity(dev1, dev2, file1, file2)
                     similarity_score_list.append(similarity_score)
 
