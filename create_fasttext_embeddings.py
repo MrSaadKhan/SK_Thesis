@@ -28,9 +28,9 @@ def train_fasttext_model(file_path, device_list, word_embedding_option=1):
 
     print('Creating FastText model')
     if word_embedding_option == 1:
-        model = FastText(sentences=dev1_seen_word, vector_size=100, window=5, min_count=1, workers=4)
+        model = FastText(sentences=dev1_seen_word, vector_size=768, window=5, min_count=1, workers=4)
     else:
-        model = FastText(sentences=[sentence[0] for sentence in dev1_seen], vector_size=100, window=5, min_count=1, workers=4)
+        model = FastText(sentences=[sentence[0] for sentence in dev1_seen], vector_size=768, window=5, min_count=1, workers=4)
     print('\033[92mFastText model created ✔\033[0m')
 
     # Create a filename based on the list of devices
@@ -40,7 +40,7 @@ def train_fasttext_model(file_path, device_list, word_embedding_option=1):
 
     return model_filename
 
-def create_device_embedding(model, file_path, device, vector_size=100):
+def create_device_embedding(model, file_path, device, vector_size=768):
     
     # Check if the embeddings text file already exists
     embeddings_folder = "fast_text_embeddings"

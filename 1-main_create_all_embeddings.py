@@ -1,7 +1,6 @@
 import os
-import numpy as np
-from gensim.models import FastText
 import create_fasttext_embeddings
+import create_bert_embeddings
 
 def main():
     # Directory path to read files from
@@ -27,6 +26,9 @@ def main():
     # Train the FastText model and create it's embeddings
     model_filename = create_fasttext_embeddings.train_fasttext_model(file_path, device_list)
     create_fasttext_embeddings.create_embeddings(model_filename, file_path, device_list)
+
+    # Create BERT embeddings using pretrained model
+    create_bert_embeddings.create_embeddings(file_path, device_list)
 
 if __name__ == "__main__":
     main()
