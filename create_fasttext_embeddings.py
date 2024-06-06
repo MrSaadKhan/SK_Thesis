@@ -45,8 +45,8 @@ def create_device_embedding(model, file_path, device, vector_size=768):
     # Check if the embeddings text file already exists
     embeddings_folder = "fast_text_embeddings"
     # Define filenames for seen and unseen embeddings
-    seen_embeddings_filename = os.path.join(embeddings_folder, device + "_seen_fasttext_embeddings.txt")
-    unseen_embeddings_filename = os.path.join(embeddings_folder, device + "_unseen_fasttext_embeddings.txt")
+    seen_embeddings_filename = os.path.join(embeddings_folder, device + "_seen_fast_text_embeddings.txt")
+    unseen_embeddings_filename = os.path.join(embeddings_folder, device + "_unseen_fast_text_embeddings.txt")
     if not os.path.exists(embeddings_folder):
         os.makedirs(embeddings_folder)
     
