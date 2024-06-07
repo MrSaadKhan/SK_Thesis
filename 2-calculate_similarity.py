@@ -124,7 +124,7 @@ def main():
 
                 for _ in tqdm(range(iterations), desc="Iterations", leave=False):  # Wrap innermost loop with tqdm
                     file1 = os.path.join(file_path, embed_option, dev1 + "_" + seen_data_option + "_" + embed_option + ".txt")
-                    file2 = os.path.join(file_path, embed_option, dev1 + "_" + seen_data_option + "_" + embed_option + ".txt")
+                    file2 = os.path.join(file_path, embed_option, dev2 + "_" + seen_data_option + "_" + embed_option + ".txt")
                     similarity_score = calculate_similarity(dev1, dev2, file1, file2)
                     similarity_score_list.append(similarity_score)
 
