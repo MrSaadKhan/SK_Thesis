@@ -29,9 +29,9 @@ def classify_embeddings_random_forest(folder_path, output_name):
     # Test read specific line from the first file
     test_file_path = os.path.join(folder_path, sorted(os.listdir(folder_path))[0])
     test_line_number = 1
-    test_vector = read_specific_line(test_file_path, test_line_number)
-    if test_vector is not None:
-        print(f"Test vector from line {test_line_number} of {test_file_path}: {test_vector}")
+    # test_vector = read_specific_line(test_file_path, test_line_number)
+    # if test_vector is not None:
+    #     print(f"Test vector from line {test_line_number} of {test_file_path}: {test_vector}")
 
     # List of file paths in the folder
     file_paths = [os.path.join(folder_path, fname) for fname in os.listdir(folder_path) if fname.endswith('.txt')]
