@@ -1,12 +1,11 @@
 import numpy as np
 import os
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.utils import shuffle
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix, ConfusionMatrixDisplay
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
-def classify_embeddings_random_forest(folder_path):
+def classify_embeddings_random_forest(folder_path, output_name):
     def load_embeddings(file_path):
         with open(file_path, 'r', encoding='utf-8') as file:
             for line in file:
@@ -73,13 +72,16 @@ def classify_embeddings_random_forest(folder_path):
     disp = ConfusionMatrixDisplay(confusion_matrix=conf_matrix, display_labels=np.unique(all_labels))
     disp.plot(cmap=plt.cm.Blues)
     plt.show()
-    plt.savefig('confusion_matrix.png')
+    plt.savefig(output_name + 'confusion_matrix.png')
 
 
 if __name__ == "__main__":
     file_path = r'/home/iotresearch/saad/FastTextExp/thesis_b' 
     if not os.path.exists(file_path):
         file_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T2\ELEC 4952 - Thesis B\python\thesis_b'
-    # Example usage
-    folder_path = os.path.join(file_path, "bert_embeddings")
-    classify_embeddings_random_forest(folder_path)
+
+    embed_option = ["bert_embeddings", "fast_text_embeddings"]
+
+    for option in embed_option:
+        folder_path = os.path.join(file_path, option)
+        classify_embeddings_random_forest(folder_path, option)
