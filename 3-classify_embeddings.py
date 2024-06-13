@@ -4,13 +4,16 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix, ConfusionMatrixDisplay
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
+from tqdm import tqdm  # Import tqdm for progress bars
 
 def classify_embeddings_random_forest(folder_path, output_name):
     def load_embeddings(file_path):
+        embeddings = []
         with open(file_path, 'r', encoding='utf-8') as file:
-            for line in file:
+            for line in tqdm(file, desc=f'Loading embeddings from {os.path.basename(file_path)}', unit=' vectors'):
                 vector = np.array([float(x) for x in line.strip().split()])
-                yield vector
+                embeddings.append(vector)
+        return embeddings
 
     def read_specific_line(file_path, line_number):
         try:
@@ -40,7 +43,7 @@ def classify_embeddings_random_forest(folder_path, output_name):
     all_embeddings = []
     all_labels = []
     for i, file_path in enumerate(sorted(file_paths)):  # Sorted to ensure seen and unseen pairs are together
-        device_embeddings = list(load_embeddings(file_path))
+        device_embeddings = load_embeddings(file_path)
         labels = [i // 2] * len(device_embeddings)
         all_embeddings.extend(device_embeddings)
         all_labels.extend(labels)
@@ -51,13 +54,25 @@ def classify_embeddings_random_forest(folder_path, output_name):
 
     # Split into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(all_embeddings, all_labels, test_size=0.2, random_state=42)
+    print(f'Training set size: {len(X_train)}')
+    print(f'Testing set size: {len(X_test)}')
 
     # Initialize and train the Random Forest classifier
     clf = RandomForestClassifier(n_estimators=100, random_state=42)
-    clf.fit(X_train, y_train)
 
-    # Make predictions
-    y_pred = clf.predict(X_test)
+    # Training with progress bar
+    clf.fit(X_train, y_train)
+    print('Training completed.')
+
+    # Print lengths of training and testing data used for classification
+    print(f'Training data length for classification: {len(X_train)}')
+    print(f'Testing data length for classification: {len(X_test)}')
+
+    # Make predictions with progress bar
+    y_pred = []
+    for batch in tqdm(np.array_split(X_test, 10), desc='Classifying', unit=' batches'):
+        y_pred.extend(clf.predict(batch))
+    y_pred = np.array(y_pred)
 
     # Evaluate the classifier
     accuracy = accuracy_score(y_test, y_pred)
@@ -71,8 +86,9 @@ def classify_embeddings_random_forest(folder_path, output_name):
     # Display the confusion matrix
     disp = ConfusionMatrixDisplay(confusion_matrix=conf_matrix, display_labels=np.unique(all_labels))
     disp.plot(cmap=plt.cm.Blues)
+    plt.title(f'Confusion Matrix - {output_name}')
+    plt.savefig(f'{output_name}_confusion_matrix.png')  # Save figure with appropriate filename
     plt.show()
-    plt.savefig(output_name + 'confusion_matrix.png')
 
 
 if __name__ == "__main__":
