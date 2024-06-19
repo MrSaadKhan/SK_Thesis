@@ -103,4 +103,4 @@ def create_embeddings(model_filename, file_path, device_list):
     # Load the trained FastText model
     model = FastText.load(model_filename)
     for device in device_list:
-        create_device_embedding(model, file_path, device)
+        create_device_embedding(model, file_path, device, 128)
