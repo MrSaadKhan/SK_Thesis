@@ -75,9 +75,12 @@ def create_device_embedding(model, tokenizer, file_path, device, vector_size=768
     print(f'Number of unseen embeddings created: {len(unseen)}')
 
 def create_embeddings(file_path, device_list):
-    model_name = 'bert-base-uncased'
+    # model_name = 'bert-base-uncased'
+    code_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T2\ELEC 4952 - Thesis B\python\thesis_b'
+    model_name = os.path.join(code_path, "bert_tiny")
+    
     tokenizer = BertTokenizer.from_pretrained(model_name)
     model = BertModel.from_pretrained(model_name)
     
     for device in device_list:
-        create_device_embedding(model, tokenizer, file_path, device)
+        create_device_embedding(model, tokenizer, file_path, device, 128)

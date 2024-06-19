@@ -53,7 +53,7 @@ def classify_embeddings_random_forest(folder_path, output_name):
     all_labels = np.array(all_labels)
 
     # Split into training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(all_embeddings, all_labels, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(all_embeddings, all_labels, test_size=0.2, stratify=all_labels, random_state=42)
     print(f'Training set size: {len(X_train)}')
     print(f'Testing set size: {len(X_test)}')
 

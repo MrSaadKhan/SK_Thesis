@@ -4,7 +4,7 @@ from gensim.utils import simple_preprocess
 import prepare_data
 import numpy as np
 
-def train_fasttext_model(file_path, device_list, word_embedding_option=1):
+def train_fasttext_model(file_path, device_list, word_embedding_option=1, embedding_size=768):
     
     model_filename = "_".join(device_list) + "_fasttext_model"
     # Check if the model already exists
@@ -28,9 +28,9 @@ def train_fasttext_model(file_path, device_list, word_embedding_option=1):
 
     print('Creating FastText model')
     if word_embedding_option == 1:
-        model = FastText(sentences=dev1_seen_word, vector_size=768, window=5, min_count=1, workers=4)
+        model = FastText(sentences=dev1_seen_word, vector_size=embedding_size, window=5, min_count=1, workers=4)
     else:
-        model = FastText(sentences=[sentence[0] for sentence in dev1_seen], vector_size=768, window=5, min_count=1, workers=4)
+        model = FastText(sentences=[sentence[0] for sentence in dev1_seen], vector_size=embedding_size, window=5, min_count=1, workers=4)
     print('\033[92mFastText model created ✔\033[0m')
 
     # Create a filename based on the list of devices
