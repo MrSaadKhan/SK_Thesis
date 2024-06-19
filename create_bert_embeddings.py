@@ -77,6 +77,10 @@ def create_device_embedding(model, tokenizer, file_path, device, vector_size=768
 def create_embeddings(file_path, device_list):
     # model_name = 'bert-base-uncased'
     code_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T2\ELEC 4952 - Thesis B\python\thesis_b'
+
+    if not os.path.exists(file_path):
+        file_path = r'/home/iotresearch/saad/FastTextExp/thesis_b'
+
     model_name = os.path.join(code_path, "bert_tiny")
     
     tokenizer = BertTokenizer.from_pretrained(model_name)
