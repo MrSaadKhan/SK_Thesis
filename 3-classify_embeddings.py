@@ -88,7 +88,7 @@ def classify_embeddings_random_forest(folder_path, output_name, vector_size):
     disp = ConfusionMatrixDisplay(confusion_matrix=conf_matrix, display_labels=np.unique(all_labels))
     disp.plot(cmap=plt.cm.Blues)
     plt.title(f'Confusion Matrix - {output_name}')
-    plt.savefig(f'{output_name}_confusion_matrix.png')  # Save figure with appropriate filename
+    plt.savefig(f'{output_name}_confusion_matrix_{vector_size}.png')  # Save figure with appropriate filename
     plt.show()
 
 
@@ -96,12 +96,19 @@ if __name__ == "__main__":
     file_path = r'/home/iotresearch/saad/FastTextExp/thesis_b' 
     if not os.path.exists(file_path):
         file_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T2\ELEC 4952 - Thesis B\python\thesis_b'
+    
+    # vector_size = 768
+    vector_list = [128, 64, 32, 15, 5]
 
-    embed_option = ["bert_embeddings", "fast_text_embeddings"]
-    vector_size = 768
+    for vector_size in vector_list:
+        print(f"Classifying embeddings at vector size: {vector_size}")
 
-    embed_option = [f"{option}_{vector_size}" for option in embed_option]
+        embed_option = ["bert_embeddings", "fast_text_embeddings"]
+        embed_option = [f"{option}_{vector_size}" for option in embed_option]
 
-    for option in embed_option:
-        folder_path = os.path.join(file_path, option)
-        classify_embeddings_random_forest(folder_path, option, vector_size)
+        for option in embed_option:
+            folder_path = os.path.join(file_path, option)
+            if os.path.exists(folder_path):
+                classify_embeddings_random_forest(folder_path, option, vector_size)
+            else:
+                print(f"{embed_option} does not exist!")
