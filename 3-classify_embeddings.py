@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from tqdm import tqdm  # Import tqdm for progress bars
 
-def classify_embeddings_random_forest(folder_path, output_name):
+def classify_embeddings_random_forest(folder_path, output_name, vector_size):
     def load_embeddings(file_path):
         embeddings = []
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -74,6 +74,7 @@ def classify_embeddings_random_forest(folder_path, output_name):
         y_pred.extend(clf.predict(batch))
     y_pred = np.array(y_pred)
 
+    print(f"Evaluation of RF classifier at a vector size of {vector_size}")
     # Evaluate the classifier
     accuracy = accuracy_score(y_test, y_pred)
     report = classification_report(y_test, y_pred)
@@ -97,7 +98,10 @@ if __name__ == "__main__":
         file_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T2\ELEC 4952 - Thesis B\python\thesis_b'
 
     embed_option = ["bert_embeddings", "fast_text_embeddings"]
+    vector_size = 768
+
+    embed_option = [f"{option}_{vector_size}" for option in embed_option]
 
     for option in embed_option:
         folder_path = os.path.join(file_path, option)
-        classify_embeddings_random_forest(folder_path, option)
+        classify_embeddings_random_forest(folder_path, option, vector_size)

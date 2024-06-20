@@ -6,7 +6,7 @@ import prepare_data
 from tqdm import tqdm
 
 def create_device_embedding(model, tokenizer, file_path, device, vector_size=768):
-    embeddings_folder = "bert_embeddings"
+    embeddings_folder = "bert_embeddings" + "_" + str(vector_size)
     seen_embeddings_filename = os.path.join(embeddings_folder, device + "_seen_bert_embeddings.txt")
     unseen_embeddings_filename = os.path.join(embeddings_folder, device + "_unseen_bert_embeddings.txt")
     
@@ -74,15 +74,7 @@ def create_device_embedding(model, tokenizer, file_path, device, vector_size=768
     print(f'Number of seen embeddings created: {len(seen)}')
     print(f'Number of unseen embeddings created: {len(unseen)}')
 
-def create_embeddings(file_path, device_list):
-    # model_name = 'bert-base-uncased'
-    # code_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T2\ELEC 4952 - Thesis B\python\thesis_b'
-
-    # if not os.path.exists(file_path):
-    #     file_path = r'/home/iotresearch/saad/FastTextExp/thesis_b'
-
-    # model_name = os.path.join(code_path, "bert_tiny")
-    
+def create_embeddings(file_path, device_list, vector_size = 768):
     def load_bert_model(model_name):
         # Load tokenizer and model
         tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -90,9 +82,21 @@ def create_embeddings(file_path, device_list):
         
         return tokenizer, model
 
-    # Example usage
-    model_name = "prajjwal1/bert-tiny"
+    # List of pretrained models of [128, 256, 512, 768]
+    model_list = ["prajjwal1/bert-tiny", "prajjwal1/bert-mini", "prajjwal1/bert-medium", "bert-base-uncased"]
+    model_lengths = [128, 256, 512, 768]
+    # Create a dictionary to map vector_size to model names
+    model_dict = dict(zip(model_lengths, model_list))
+
+     # Check if the provided vector_size is valid
+    if vector_size not in model_dict:
+        print(f"Invalid vector_size. Please choose from {model_lengths}.")
+        return
+
+    # Get the model name based on vector_size
+    model_name = model_dict[vector_size]
+
     tokenizer, model = load_bert_model(model_name)
 
     for device in device_list:
-        create_device_embedding(model, tokenizer, file_path, device, 128)
+        create_device_embedding(model, tokenizer, file_path, device, vector_size)

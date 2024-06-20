@@ -2,7 +2,7 @@ import os
 import create_fasttext_embeddings
 import create_bert_embeddings
 
-def main():
+def main(vector_size = 768):
     # Directory path to read files from
     file_path = r'/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix'
 
@@ -24,11 +24,13 @@ def main():
     print(device_list)
 
     # Train the FastText model and create it's embeddings
-    model_filename = create_fasttext_embeddings.train_fasttext_model(file_path, device_list)
-    create_fasttext_embeddings.create_embeddings(model_filename, file_path, device_list)
+    model_filename = create_fasttext_embeddings.train_fasttext_model(file_path, device_list, 1, vector_size)
+    create_fasttext_embeddings.create_embeddings(model_filename, file_path, device_list, vector_size)
 
     # Create BERT embeddings using pretrained model
-    create_bert_embeddings.create_embeddings(file_path, device_list)
+    create_bert_embeddings.create_embeddings(file_path, device_list, vector_size)
 
 if __name__ == "__main__":
-    main()
+    vector_list = [128, 64, 32, 15, 5]
+    for vector in vector_list:
+        main(vector)

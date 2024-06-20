@@ -6,7 +6,12 @@ import numpy as np
 
 def train_fasttext_model(file_path, device_list, word_embedding_option=1, embedding_size=768):
     
-    model_filename = "_".join(device_list) + "_fasttext_model"
+    # Remove ".json" from each device name
+    cleaned_device_list = [device.replace(".json", "") for device in device_list]
+
+    # Create the filename
+    model_filename = "_".join(cleaned_device_list) + "_fasttext_model" + "_" + str(embedding_size)
+
     # Check if the model already exists
     if os.path.exists(model_filename):
         print(f'\033[92mModel already exists: {model_filename} ✔\033[0m')
@@ -43,7 +48,7 @@ def train_fasttext_model(file_path, device_list, word_embedding_option=1, embedd
 def create_device_embedding(model, file_path, device, vector_size=768):
     
     # Check if the embeddings text file already exists
-    embeddings_folder = "fast_text_embeddings"
+    embeddings_folder = "fast_text_embeddings" + "_" + str(vector_size)
     # Define filenames for seen and unseen embeddings
     seen_embeddings_filename = os.path.join(embeddings_folder, device + "_seen_fast_text_embeddings.txt")
     unseen_embeddings_filename = os.path.join(embeddings_folder, device + "_unseen_fast_text_embeddings.txt")
@@ -99,8 +104,8 @@ def create_device_embedding(model, file_path, device, vector_size=768):
     print(f'Number of seen embeddings created: {len(seen_embeddings)}')
     print(f'Number of unseen embeddings created: {len(unseen_embeddings)}')
 
-def create_embeddings(model_filename, file_path, device_list):
+def create_embeddings(model_filename, file_path, device_list, vector_size = 768):
     # Load the trained FastText model
     model = FastText.load(model_filename)
     for device in device_list:
-        create_device_embedding(model, file_path, device, 128)
+        create_device_embedding(model, file_path, device, vector_size)
