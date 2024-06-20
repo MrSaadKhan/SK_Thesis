@@ -84,11 +84,18 @@ def classify_embeddings_random_forest(folder_path, output_name, vector_size):
     print('Classification Report:')
     print(report)
 
-    # Display the confusion matrix
-    disp = ConfusionMatrixDisplay(confusion_matrix=conf_matrix, display_labels=np.unique(all_labels))
-    disp.plot(cmap=plt.cm.Blues)
-    plt.title(f'Confusion Matrix - {output_name}')
-    plt.savefig(f'{output_name}_confusion_matrix_{vector_size}.png')  # Save figure with appropriate filename
+    # Assuming `conf_matrix` is your confusion matrix array
+    # Calculate row-wise sums for normalization
+    row_sums = conf_matrix.sum(axis=1, keepdims=True)
+
+    # Normalize the confusion matrix to percentages
+    conf_matrix_percent = conf_matrix / row_sums
+
+    # Display the confusion matrix as percentages
+    disp = ConfusionMatrixDisplay(confusion_matrix=conf_matrix_percent, display_labels=np.unique(all_labels))
+    disp.plot(cmap=plt.cm.Blues, values_format=".2%")  # Format values as percentages with two decimal places
+    plt.title(f'Confusion Matrix - {output_name} {vector_size}')
+    plt.savefig(f'{output_name}_confusion_matrix_{vector_size}_percent.png')  # Save figure with appropriate filename
     plt.show()
 
 
