@@ -38,8 +38,6 @@ def train_fasttext_model(file_path, device_list, word_embedding_option=1, embedd
         model = FastText(sentences=[sentence[0] for sentence in dev1_seen], vector_size=embedding_size, window=5, min_count=1, workers=4)
     print('\033[92mFastText model created ✔\033[0m')
 
-    # Create a filename based on the list of devices
-    model_filename = "_".join(device_list) + "_fasttext_model"
     model.save(model_filename)
     print(f'\033[92mFastText model saved as {model_filename} ✔\033[0m')
 
