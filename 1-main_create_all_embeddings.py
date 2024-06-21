@@ -93,7 +93,7 @@ def print_stats(stats_list, vector_list):
         print("-----------------------")
 
 if __name__ == "__main__":
-    vector_list = [128, 64, 32, 15, 5]
+    vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
     stats_list = []
     for vector in vector_list:
         print(f"Creating embeddings at vector size: {vector}")
