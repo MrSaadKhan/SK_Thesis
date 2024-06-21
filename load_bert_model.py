@@ -46,15 +46,15 @@ def convert_and_get_model(embedding_size):
         print("Converted model embedding size does not match the expected size.")
         return None, None
 
-    # Load the converted model
-    model = BertModel(config)  # Use BertModel instead of BertForPreTraining
-    model.load_state_dict(torch.load(pytorch_dump_path))
-    print("Model loaded successfully.")
-
-    # Load the tokenizer
-    tokenizer = BertTokenizer.from_pretrained(model_dir)
-    
-    return model, tokenizer
+    try:
+        model = BertModel(config)
+        state_dict = torch.load(pytorch_dump_path)
+        state_dict = {k.replace('bert.', ''): v for k, v in state_dict.items()}
+        model.load_state_dict(state_dict, strict=False)
+        tokenizer = BertTokenizer.from_pretrained(model_dir)
+        return model, tokenizer
+    except Exception as e:
+        return None, None
 
 # # Example usage
 # embedding_size = 256
