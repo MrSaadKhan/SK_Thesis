@@ -47,7 +47,7 @@ def main(vector_size = 768):
     # Create BERT embeddings using pretrained model
     # devices_lengths = [seen, unseen]
 
-    devices_lengths, temp = create_bert_embeddings.create_embeddings(file_path, device_list, vector_size)
+    seen, unseen, temp = create_bert_embeddings.create_embeddings(file_path, device_list, vector_size)
     if temp is not None:
         bert_embeddings_creation_time = time.time() - fast_text_embeddings_creation_time
         bert_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1)[0] - start_memory
@@ -55,7 +55,6 @@ def main(vector_size = 768):
         bert_embeddings_creation_time = 0
         bert_embeddings_creation_mem_usage = 0
 
-    seen, unseen = devices_lengths
     total = seen + unseen
 
     # Per flow!

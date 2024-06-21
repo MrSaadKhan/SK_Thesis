@@ -74,7 +74,7 @@ def create_device_embedding(model, tokenizer, file_path, device, vector_size=768
             pbar.update(1)
     print(f'Number of seen embeddings created: {len(seen)}')
     print(f'Number of unseen embeddings created: {len(unseen)}')
-    return seen, unseen
+    return len(seen), len(unseen)
 
 def create_embeddings(file_path, device_list, vector_size = 768):
     # def load_bert_model(model_name):
@@ -115,4 +115,4 @@ def create_embeddings(file_path, device_list, vector_size = 768):
         seen_count += seen
         unseen_count += unseen
 
-    return (seen_count, unseen_count), flag
+    return seen_count, unseen_count, flag
