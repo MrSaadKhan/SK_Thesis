@@ -1,7 +1,7 @@
 import os
 import subprocess
 import torch
-from transformers import AutoConfig, BertForPreTraining, BertTokenizer
+from transformers import AutoConfig, BertModel, BertTokenizer
 
 def convert_and_get_model(embedding_size):
     # Define model directories and expected embedding sizes
@@ -47,7 +47,7 @@ def convert_and_get_model(embedding_size):
         return None, None
 
     # Load the converted model
-    model = BertForPreTraining(config)
+    model = BertModel(config)  # Use BertModel instead of BertForPreTraining
     model.load_state_dict(torch.load(pytorch_dump_path))
     print("Model loaded successfully.")
 
