@@ -4,6 +4,7 @@ import torch
 from transformers import BertTokenizer, BertModel, TFBertModel, AutoModel, AutoTokenizer
 import prepare_data
 from tqdm import tqdm
+import load_bert_model
 
 def create_device_embedding(model, tokenizer, file_path, device, vector_size=768):
     embeddings_folder = "bert_embeddings" + "_" + str(vector_size)
@@ -75,28 +76,34 @@ def create_device_embedding(model, tokenizer, file_path, device, vector_size=768
     print(f'Number of unseen embeddings created: {len(unseen)}')
 
 def create_embeddings(file_path, device_list, vector_size = 768):
-    def load_bert_model(model_name):
-        # Load tokenizer and model
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
-        model = AutoModel.from_pretrained(model_name)
+    # def load_bert_model(model_name):
+    #     # Load tokenizer and model
+    #     tokenizer = AutoTokenizer.from_pretrained(model_name)
+    #     model = AutoModel.from_pretrained(model_name)
         
-        return tokenizer, model
+    #     return tokenizer, model
 
-    # List of pretrained models of [128, 256, 512, 768]
-    model_list = ["prajjwal1/bert-tiny", "prajjwal1/bert-mini", "prajjwal1/bert-medium", "bert-base-uncased"]
+    # # List of pretrained models of [128, 256, 512, 768]
+    # model_list = ["prajjwal1/bert-tiny", "prajjwal1/bert-mini", "prajjwal1/bert-medium", "bert-base-uncased"]
     model_lengths = [128, 256, 512, 768]
     # Create a dictionary to map vector_size to model names
-    model_dict = dict(zip(model_lengths, model_list))
+    # model_dict = dict(zip(model_lengths, model_list))
 
      # Check if the provided vector_size is valid
-    if vector_size not in model_dict:
+    if vector_size not in model_lengths:
         print(f"Invalid vector_size. Please choose from {model_lengths}.")
         return
 
     # Get the model name based on vector_size
-    model_name = model_dict[vector_size]
+    # model_name = model_dict[vector_size]
 
-    tokenizer, model = load_bert_model(model_name)
+    model, tokenizer = load_bert_model.convert_and_get_model(vector_size)
 
+    if model and tokenizer:
+        print("Model and tokenizer loaded successfully.")
+    else:
+        print("Failed to load model and tokenizer.")
+        return
+    
     for device in device_list:
         create_device_embedding(model, tokenizer, file_path, device, vector_size)
