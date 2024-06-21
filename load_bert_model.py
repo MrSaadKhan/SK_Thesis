@@ -19,6 +19,9 @@ def convert_and_get_model(embedding_size):
 
     # Define paths
     model_dir = rf"C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T2\ELEC 4952 - Thesis B\python\thesis_b\models\bert\{model_info[embedding_size]}"
+    if not os.path.exists(model_dir):
+        model_dir = rf"/home/iotresearch/saad/FastTextExp/thesis_b/models/bert/{model_info[embedding_size]}"
+
     tf_checkpoint_path = os.path.join(model_dir, "bert_model.ckpt")
     bert_config_file = os.path.join(model_dir, "bert_config.json")
     pytorch_dump_path = os.path.join(model_dir, "pytorch_model.bin")
