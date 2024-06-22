@@ -93,7 +93,7 @@ def create_embeddings(file_path, device_list, vector_size = 768):
      # Check if the provided vector_size is valid
     if vector_size not in model_lengths:
         print(f"Invalid vector_size. Please choose from {model_lengths}.")
-        return
+        return 0, 0, None
 
     # Get the model name based on vector_size
     # model_name = model_dict[vector_size]
@@ -106,6 +106,7 @@ def create_embeddings(file_path, device_list, vector_size = 768):
     else:
         print("Failed to load model and tokenizer.")
         flag = 1
+        return 0, 0, None
 
     seen_count = 0
     unseen_count = 0

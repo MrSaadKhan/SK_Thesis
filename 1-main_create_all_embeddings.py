@@ -3,6 +3,7 @@ import time
 import create_fasttext_embeddings
 import create_bert_embeddings
 from memory_profiler import profile, memory_usage
+import gc
 
 @profile
 def main(vector_size = 768):
@@ -27,6 +28,7 @@ def main(vector_size = 768):
     print(device_list)
 
     # Train the FastText model and create it's embeddings
+    gc.collect()
     start_memory = memory_usage(-1, interval=0.1)[0]
     start_time = time.time()
 
@@ -34,13 +36,15 @@ def main(vector_size = 768):
     fast_text_training_time = time.time() - start_time
     fast_text_training_mem_usage = memory_usage(-1, interval=0.1)[0] - start_memory
 
+    gc.collect()
     start_memory = memory_usage(-1, interval=0.1)[0]
     start_time = time.time()
 
-    create_fasttext_embeddings.create_embeddings(model_filename, file_path, device_list, vector_size)
+    seen_ft, unseen_ft = create_fasttext_embeddings.create_embeddings(model_filename, file_path, device_list, vector_size)
     fast_text_embeddings_creation_time = time.time() - start_time
     fast_text_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1)[0] - start_memory
 
+    gc.collect()
     start_memory = memory_usage(-1, interval=0.1)[0]
     start_time = time.time()
 
@@ -56,10 +60,19 @@ def main(vector_size = 768):
         bert_embeddings_creation_mem_usage = 0
 
     total = seen + unseen
+    if total == 0:
+        total = seen_ft + unseen_ft
+        unseen = unseen_ft
+        seen = seen_ft
 
     # Per flow!
-    times = (fast_text_training_time/unseen, fast_text_embeddings_creation_time/total, bert_embeddings_creation_time/total)
-    memories = (fast_text_training_mem_usage/unseen, fast_text_embeddings_creation_mem_usage/total, bert_embeddings_creation_mem_usage/total)
+    if total != 0:
+        times = (fast_text_training_time/unseen, fast_text_embeddings_creation_time/total, bert_embeddings_creation_time/total)
+        memories = (fast_text_training_mem_usage/unseen, fast_text_embeddings_creation_mem_usage/total, bert_embeddings_creation_mem_usage/total)
+
+    else:
+        times = (0, 0, 0)
+        memories = times
 
     return times, memories
 
@@ -80,12 +93,12 @@ def print_stats(stats_list, vector_list):
         print(f"Stats for category: {vector}")
 
         # Print times with descriptions
-        print("Times:")
+        print("Times (sec):")
         for desc, item in zip(time_descriptions, times):
             print(f"{desc}: {item}")
 
         # Print memories with descriptions
-        print("Memories:")
+        print("Memories (MB):")
         for desc, item in zip(memory_descriptions, memories):
             print(f"{desc}: {item}")
 

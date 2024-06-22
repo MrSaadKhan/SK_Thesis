@@ -55,7 +55,7 @@ def create_device_embedding(model, file_path, device, vector_size=768):
     
     if os.path.exists(seen_embeddings_filename) and os.path.exists(unseen_embeddings_filename):
         print(f'\033[92mEmbeddings already exist for {device} ✔\033[0m')
-        return
+        return 0,0
     
     # Initialize lists for storing seen and unseen embeddings
     seen_embeddings = []
@@ -101,9 +101,17 @@ def create_device_embedding(model, file_path, device, vector_size=768):
     # Print the number of embeddings created
     print(f'Number of seen embeddings created: {len(seen_embeddings)}')
     print(f'Number of unseen embeddings created: {len(unseen_embeddings)}')
+    return len(seen_embeddings), len(unseen_embeddings)
 
 def create_embeddings(model_filename, file_path, device_list, vector_size = 768):
+    seen_count = 0
+    unseen_count = 0
+
     # Load the trained FastText model
     model = FastText.load(model_filename)
     for device in device_list:
-        create_device_embedding(model, file_path, device, vector_size)
+        seen, unseen = create_device_embedding(model, file_path, device, vector_size)
+        seen_count += seen
+        unseen_count += unseen
+
+    return seen_count, unseen_count
