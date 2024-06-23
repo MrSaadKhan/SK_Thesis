@@ -5,6 +5,10 @@ from sklearn.metrics import classification_report, accuracy_score, confusion_mat
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from tqdm import tqdm  # Import tqdm for progress bars
+import time
+from memory_profiler import profile, memory_usage
+import gc
+import create_plots
 
 def classify_embeddings_random_forest(folder_path, output_name, vector_size):
     def load_embeddings(file_path):
@@ -95,9 +99,34 @@ def classify_embeddings_random_forest(folder_path, output_name, vector_size):
     disp = ConfusionMatrixDisplay(confusion_matrix=conf_matrix_percent, display_labels=np.unique(all_labels))
     disp.plot(cmap=plt.cm.Blues, values_format=".2%")  # Format values as percentages with two decimal places
     plt.title(f'Confusion Matrix - {output_name} {vector_size}')
-    plt.savefig(f'{output_name}_confusion_matrix_{vector_size}_percent.png')  # Save figure with appropriate filename
+    plt.savefig(f'plots/{output_name}_confusion_matrix_{vector_size}_percent.png')  # Save figure with appropriate filename
     plt.show()
 
+def print_stats(stats_list, vector_list):
+    print("-----------------------")
+
+    # Define descriptions for each item in times and memories
+    time_descriptions = ["FastText Embeddings classification Time per Flow",
+                         "BERT Embeddings classification Time per Flow"]
+
+    memory_descriptions = ["FastText Embeddings classification Memory Usage per Flow",
+                         "BERT Embeddings classification Memory Usage per Flow"]
+
+    # Printing the stats
+    for vector, (times, memories) in zip(vector_list, stats_list):
+        print(f"Stats for category: {vector}")
+
+        # Print times with descriptions
+        print("Times (sec):")
+        for desc, item in zip(time_descriptions, times):
+            print(f"{desc}: {item}")
+
+        # Print memories with descriptions
+        print("Memories (MB):")
+        for desc, item in zip(memory_descriptions, memories):
+            print(f"{desc}: {item}")
+
+        print("-----------------------")
 
 if __name__ == "__main__":
     file_path = r'/home/iotresearch/saad/FastTextExp/thesis_b' 
@@ -105,7 +134,18 @@ if __name__ == "__main__":
         file_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T2\ELEC 4952 - Thesis B\python\thesis_b'
     
     # vector_size = 768
-    vector_list = [128, 64, 32, 15, 5]
+    # vector_list = [128, 64, 32, 15, 5]
+    vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
+    stats_list = []
+
+    time_descriptions = [
+        "FastText Embeddings classification Time per Flow",
+        "BERT Embeddings classification Time per Flow"
+    ]
+    memory_descriptions = [
+        "FastText Embeddings classification Memory Usage per Flow",
+        "BERT Embeddings classification Memory Usage per Flow"
+    ]
 
     for vector_size in vector_list:
         print(f"Classifying embeddings at vector size: {vector_size}")
@@ -113,9 +153,38 @@ if __name__ == "__main__":
         embed_option = ["bert_embeddings", "fast_text_embeddings"]
         embed_option = [f"{option}_{vector_size}" for option in embed_option]
 
+        bert_embeddings_classification_time = 0
+        bert_embeddings_classification_mem_usage = 0
+        fast_text_embeddings_classification_time = 0
+        fast_text_embeddings_classification_mem_usage = 0
+
         for option in embed_option:
             folder_path = os.path.join(file_path, option)
+
+            gc.collect()
+            start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
+            start_time = time.time()
+
             if os.path.exists(folder_path):
                 classify_embeddings_random_forest(folder_path, option, vector_size)
+
+                if option == "bert_embeddings":
+                    bert_embeddings_classification_time = time.time() - start_time
+                    bert_embeddings_classification_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
+
+                if option == "fast_text_embeddings":
+                    fast_text_embeddings_classification_time = time.time() - start_time
+                    fast_text_embeddings_classification_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
+
             else:
-                print(f"{embed_option} does not exist!")
+                print(f"{option} does not exist!")
+
+
+        stats_list.append((
+            (fast_text_embeddings_classification_time, bert_embeddings_classification_time),
+            (fast_text_embeddings_classification_mem_usage, bert_embeddings_classification_mem_usage)
+        ))
+
+    print_stats(stats_list, vector_list)
+    create_plots.plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_descriptions)
+    

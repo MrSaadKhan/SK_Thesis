@@ -2,6 +2,7 @@ import os
 import time
 import create_fasttext_embeddings
 import create_bert_embeddings
+import create_plots
 from memory_profiler import profile, memory_usage
 import gc
 
@@ -29,23 +30,23 @@ def main(vector_size = 768):
 
     # Train the FastText model and create it's embeddings
     gc.collect()
-    start_memory = memory_usage(-1, interval=0.1)[0]
+    start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
     start_time = time.time()
 
     model_filename = create_fasttext_embeddings.train_fasttext_model(file_path, device_list, 1, vector_size)
     fast_text_training_time = time.time() - start_time
-    fast_text_training_mem_usage = memory_usage(-1, interval=0.1)[0] - start_memory
+    fast_text_training_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
 
     gc.collect()
-    start_memory = memory_usage(-1, interval=0.1)[0]
+    start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
     start_time = time.time()
 
     seen_ft, unseen_ft = create_fasttext_embeddings.create_embeddings(model_filename, file_path, device_list, vector_size)
     fast_text_embeddings_creation_time = time.time() - start_time
-    fast_text_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1)[0] - start_memory
+    fast_text_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
 
     gc.collect()
-    start_memory = memory_usage(-1, interval=0.1)[0]
+    start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
     start_time = time.time()
 
     # Create BERT embeddings using pretrained model
@@ -54,7 +55,7 @@ def main(vector_size = 768):
     seen, unseen, temp = create_bert_embeddings.create_embeddings(file_path, device_list, vector_size)
     if temp is not None:
         bert_embeddings_creation_time = time.time() - fast_text_embeddings_creation_time
-        bert_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1)[0] - start_memory
+        bert_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
     else:
         bert_embeddings_creation_time = 0
         bert_embeddings_creation_mem_usage = 0
@@ -81,12 +82,12 @@ def print_stats(stats_list, vector_list):
 
     # Define descriptions for each item in times and memories
     time_descriptions = ["FastText Training Time per Flow",
-                         "FastText Embeddings Creation Time per Total",
-                         "BERT Embeddings Creation Time per Total"]
+                         "FastText Embeddings Creation Time per Flow",
+                         "BERT Embeddings Creation Time per Flow"]
 
     memory_descriptions = ["FastText Training Memory Usage per Flow",
-                           "FastText Embeddings Creation Memory Usage per Total",
-                           "BERT Embeddings Creation Memory Usage per Total"]
+                           "FastText Embeddings Creation Memory Usage per Flow",
+                           "BERT Embeddings Creation Memory Usage per Flow"]
 
     # Printing the stats
     for vector, (times, memories) in zip(vector_list, stats_list):
@@ -107,9 +108,20 @@ def print_stats(stats_list, vector_list):
 if __name__ == "__main__":
     vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
     stats_list = []
+
+    time_descriptions = ["FastText Training Time per Flow",
+                         "FastText Embeddings Creation Time per Flow",
+                         "BERT Embeddings Creation Time per Flow"]
+
+    memory_descriptions = ["FastText Training Memory Usage per Flow",
+                           "FastText Embeddings Creation Memory Usage per Flow",
+                           "BERT Embeddings Creation Memory Usage per Flow"]
+
+
     for vector in vector_list:
         print(f"Creating embeddings at vector size: {vector}")
         times, memories = main(vector)
         stats_list.append((times, memories))
 
     print_stats(stats_list, vector_list)
+    create_plots.plot_graphs_embedder(stats_list, vector_list, time_descriptions, memory_descriptions)
