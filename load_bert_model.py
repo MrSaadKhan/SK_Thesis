@@ -27,14 +27,27 @@ def convert_and_get_model(embedding_size):
     pytorch_dump_path = os.path.join(model_dir, "pytorch_model.bin")
 
     # Check if the PyTorch model already exists
+    # if not os.path.exists(pytorch_dump_path):
+    #     # Convert TensorFlow checkpoint to PyTorch
+    #     subprocess.run([
+    #         'python', 'convert_bert_original_tf_checkpoint_to_pytorch.py',
+    #         '--tf_checkpoint_path', tf_checkpoint_path,
+    #         '--bert_config_file', bert_config_file,
+    #         '--pytorch_dump_path', pytorch_dump_path
+    #     ], check=True)
+
+    # Check if the PyTorch dump path exists
     if not os.path.exists(pytorch_dump_path):
+        import convert_bert_original_tf_checkpoint_to_pytorch
+
         # Convert TensorFlow checkpoint to PyTorch
-        subprocess.run([
-            'python', 'convert_bert_original_tf_checkpoint_to_pytorch.py',
-            '--tf_checkpoint_path', tf_checkpoint_path,
-            '--bert_config_file', bert_config_file,
-            '--pytorch_dump_path', pytorch_dump_path
-        ], check=True)
+        convert_bert_original_tf_checkpoint_to_pytorch.convert_tf_checkpoint_to_pytorch(
+            tf_checkpoint_path=tf_checkpoint_path,
+            bert_config_file=bert_config_file,
+            pytorch_dump_path=pytorch_dump_path
+        )
+    else:
+        print(f"PyTorch dump path '{pytorch_dump_path}' already exists. Skipping conversion.")
 
     # Load the model configuration
     config = AutoConfig.from_pretrained(bert_config_file)

@@ -16,7 +16,7 @@ def create_device_embedding(model, tokenizer, file_path, device, vector_size=768
     
     if os.path.exists(seen_embeddings_filename) and os.path.exists(unseen_embeddings_filename):
         print(f'\033[92mEmbeddings already exist for {device} ✔\033[0m')
-        return
+        return 0, 0
     
     # seen_embeddings = []
     # unseen_embeddings = []

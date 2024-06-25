@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 
 def plot_graphs_embedder(stats_list, vector_list, time_descriptions, memory_descriptions):
     # Extract data for plotting
-    num_times = len(stats_list[0])
-    num_memories = len(stats_list[1])
+    # num_times = len(stats_list[0])
+    # num_memories = len(stats_list[1])
 
     fig, axs = plt.subplots(1, 2, figsize=(12, 6))
 
@@ -43,8 +43,8 @@ def plot_graphs_embedder(stats_list, vector_list, time_descriptions, memory_desc
 
 def plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_descriptions):
     # Extract data for plotting
-    num_times = len(stats_list[0])
-    num_memories = len(stats_list[1])
+    # num_times = len(stats_list[0])
+    # num_memories = len(stats_list[1])
 
     fig, axs = plt.subplots(1, 2, figsize=(12, 6))
 

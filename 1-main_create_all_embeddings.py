@@ -24,8 +24,8 @@ def main(vector_size = 768):
     # Sort devices by file size
     devices_sorted = sorted(filtered_devices, key=lambda device: os.path.getsize(os.path.join(file_path, device)))
     # Select the five smallest devices from the sorted list
-    device_list = devices_sorted[:5]
-
+    # device_list = devices_sorted[:5]
+    device_list = devices_sorted[:2]
     print(device_list)
 
     # Train the FastText model and create it's embeddings
@@ -54,7 +54,7 @@ def main(vector_size = 768):
 
     seen, unseen, temp = create_bert_embeddings.create_embeddings(file_path, device_list, vector_size)
     if temp is not None:
-        bert_embeddings_creation_time = time.time() - fast_text_embeddings_creation_time
+        bert_embeddings_creation_time = time.time() - start_time
         bert_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
     else:
         bert_embeddings_creation_time = 0
@@ -106,7 +106,8 @@ def print_stats(stats_list, vector_list):
         print("-----------------------")
 
 if __name__ == "__main__":
-    vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
+    # vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
+    vector_list = [128, 256]
     stats_list = []
 
     time_descriptions = ["FastText Training Time per Flow",
@@ -122,6 +123,6 @@ if __name__ == "__main__":
         print(f"Creating embeddings at vector size: {vector}")
         times, memories = main(vector)
         stats_list.append((times, memories))
-
+    print(stats_list)
     print_stats(stats_list, vector_list)
     create_plots.plot_graphs_embedder(stats_list, vector_list, time_descriptions, memory_descriptions)
