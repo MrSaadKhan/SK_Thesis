@@ -106,8 +106,8 @@ def print_stats(stats_list, vector_list):
         print("-----------------------")
 
 if __name__ == "__main__":
-    # vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
-    vector_list = [128, 256]
+    vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
+    # vector_list = [128, 256]
     stats_list = []
 
     time_descriptions = ["FastText Training Time per Flow",

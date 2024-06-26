@@ -134,8 +134,8 @@ if __name__ == "__main__":
         file_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T2\ELEC 4952 - Thesis B\python\thesis_b'
     
     # vector_size = 768
-    vector_list = [128]
-    # vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
+    # vector_list = [128]
+    vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
     stats_list = []
 
     time_descriptions = [

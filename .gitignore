@@ -29,3 +29,8 @@ nature_remo_xiaomi_mijia_led_irobot_roomba_planex_smacam_pantilt_jvc_kenwood_hdt
 tempCodeRunnerFile.py
 /models
 tempCodeRunnerFile.py
+/bert_embeddings_128
+/fast_text_embeddings_128
+nature_remo_xiaomi_mijia_led_fasttext_model_128.wv.vectors_ngrams.npy
+nature_remo_xiaomi_mijia_led_fasttext_model_128
+/plots
