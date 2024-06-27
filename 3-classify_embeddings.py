@@ -106,11 +106,14 @@ def print_stats(stats_list, vector_list):
     print("-----------------------")
 
     # Define descriptions for each item in times and memories
-    time_descriptions = ["FastText Embeddings classification Time per Flow",
-                         "BERT Embeddings classification Time per Flow"]
-
-    memory_descriptions = ["FastText Embeddings classification Memory Usage per Flow",
-                         "BERT Embeddings classification Memory Usage per Flow"]
+    time_descriptions = [
+        "FastText Embeddings Classification Total Time",
+        "BERT Embeddings Classification Total Time"
+    ]
+    memory_descriptions = [
+        "FastText Embeddings Classification Total Memory Usage",
+        "BERT Embeddings Classification Total Memory Usage"
+    ]
 
     # Printing the stats
     for vector, (times, memories) in zip(vector_list, stats_list):
