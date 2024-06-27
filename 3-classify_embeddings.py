@@ -134,17 +134,17 @@ if __name__ == "__main__":
         file_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T2\ELEC 4952 - Thesis B\python\thesis_b'
     
     # vector_size = 768
-    # vector_list = [128]
+    # vector_list = [128, 256]
     vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
     stats_list = []
 
     time_descriptions = [
-        "FastText Embeddings classification Time per Flow",
-        "BERT Embeddings classification Time per Flow"
+        "FastText Embeddings Classification Total Time",
+        "BERT Embeddings Classification Total Time"
     ]
     memory_descriptions = [
-        "FastText Embeddings classification Memory Usage per Flow",
-        "BERT Embeddings classification Memory Usage per Flow"
+        "FastText Embeddings Classification Total Memory Usage",
+        "BERT Embeddings Classification Total Memory Usage"
     ]
 
     for vector_size in vector_list:
@@ -168,11 +168,11 @@ if __name__ == "__main__":
             if os.path.exists(folder_path):
                 classify_embeddings_random_forest(folder_path, option, vector_size)
 
-                if option == "bert_embeddings":
+                if option.startswith("bert_embeddings"):
                     bert_embeddings_classification_time = time.time() - start_time
                     bert_embeddings_classification_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
 
-                if option == "fast_text_embeddings":
+                if option.startswith("fast_text_embeddings"):
                     fast_text_embeddings_classification_time = time.time() - start_time
                     fast_text_embeddings_classification_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
 
