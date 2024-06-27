@@ -24,8 +24,8 @@ def main(vector_size = 768):
     # Sort devices by file size
     devices_sorted = sorted(filtered_devices, key=lambda device: os.path.getsize(os.path.join(file_path, device)))
     # Select the five smallest devices from the sorted list
-    # device_list = devices_sorted[:5]
-    device_list = devices_sorted[:2]
+    device_list = devices_sorted[:5]
+    # device_list = devices_sorted[:2]
     print(device_list)
 
     # Train the FastText model and create it's embeddings
