@@ -6,16 +6,19 @@ def plot_graphs_embedder(stats_list, vector_list, time_descriptions, memory_desc
     plt.figure(figsize=(12, 6))
     plt.grid(True)
     for i, desc in enumerate(time_descriptions):
-        if desc != "FastText Training Time per Flow":
+        if desc == "FastText Training Time":
+            continue  # Skip plotting FastText Training Time
+        elif desc == "BERT Embeddings Creation Time per Flow":
             times = [stats[0][i] for stats in stats_list]
-            if desc == "BERT Embeddings Creation Time per Flow":  # Change this line to crosses and dotted
-                plt.plot(vector_list, times, marker='x', linestyle='dashed', label=desc)
-            else:
-                plt.plot(vector_list, times, marker='o', label=desc)
+            plt.plot(vector_list, times, marker='x', linestyle='dashed', label='BERT')
+        else:
+            times = [stats[0][i] for stats in stats_list]
+            plt.plot(vector_list, times, marker='o', label='FastText')
     plt.title('Embeddings Creation Time')
     plt.xlabel('Vector Size')
     plt.ylabel('Time (sec)')
     plt.legend()
+    plt.tight_layout()
     if not os.path.exists('plots'):
         os.makedirs('plots')
     plt.savefig('plots/embeddings_stats_time_plot.svg', format='svg', dpi=300, transparent=True)
@@ -26,16 +29,19 @@ def plot_graphs_embedder(stats_list, vector_list, time_descriptions, memory_desc
     plt.figure(figsize=(12, 6))
     plt.grid(True)
     for i, desc in enumerate(memory_descriptions):
-        if desc != "FastText Training Memory Usage per Flow":
+        if desc == "FastText Training Memory Usage per Flow":
+            continue  # Skip plotting FastText Training Memory Usage per Flow
+        elif desc == "BERT Embeddings Creation Memory Usage per Flow":
             memories = [stats[1][i] for stats in stats_list]
-            if desc == "BERT Embeddings Creation Memory Usage per Flow":  # Change this line to crosses and dotted
-                plt.plot(vector_list, memories, marker='x', linestyle='dashed', label=desc)
-            else:
-                plt.plot(vector_list, memories, marker='o', label=desc)
+            plt.plot(vector_list, memories, marker='x', linestyle='dashed', label='BERT')
+        else:
+            memories = [stats[1][i] for stats in stats_list]
+            plt.plot(vector_list, memories, marker='o', label='FastText')
     plt.title('Embeddings Creation Memory Usage')
     plt.xlabel('Vector Size')
     plt.ylabel('Memory (MB)')
     plt.legend()
+    plt.tight_layout()
     plt.savefig('plots/embeddings_stats_memory_plot.svg', format='svg', dpi=300, transparent=True)
     plt.savefig('plots/embeddings_stats_memory_plot.png', format='png', dpi=300, transparent=True)
     plt.close()
@@ -45,11 +51,12 @@ def plot_fasttext_training(stats_list, vector_list):
     plt.figure(figsize=(12, 6))
     plt.grid(True)
     times = [stats[0][0] for stats in stats_list]  # Assuming FastText Training Time is the first in the list
-    plt.plot(vector_list, times, marker='o', label='FastText Training Time')
-    plt.title('Embeddings Creation Memory Usage')
+    plt.plot(vector_list, times, marker='o', label='FastText Training')
+    plt.title('FastText Training Time')
     plt.xlabel('Vector Size')
     plt.ylabel('Time (sec)')
     plt.legend()
+    plt.tight_layout()  # Add this line to make the margins as thin as possible
     if not os.path.exists('plots'):
         os.makedirs('plots')
     plt.savefig('plots/fasttext_training_time_plot.svg', format='svg', dpi=300, transparent=True)
@@ -60,11 +67,12 @@ def plot_fasttext_training(stats_list, vector_list):
     plt.figure(figsize=(12, 6))
     plt.grid(True)
     memories = [stats[1][0] for stats in stats_list]  # Assuming FastText Training Memory Usage is the first in the list
-    plt.plot(vector_list, memories, marker='o', label='FastText Training Memory Usage per Flow')
+    plt.plot(vector_list, memories, marker='o', label='FastText Training')
     plt.title('FastText Training Memory Usage')
     plt.xlabel('Vector Size')
     plt.ylabel('Memory (MB)')
     plt.legend()
+    plt.tight_layout()
     plt.savefig('plots/fasttext_training_memory_plot.svg', format='svg', dpi=300, transparent=True)
     plt.savefig('plots/fasttext_training_memory_plot.png', format='png', dpi=300, transparent=True)
     plt.close()
@@ -76,13 +84,14 @@ def plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_de
     for i, desc in enumerate(time_descriptions):
         times = [stats[0][i] for stats in stats_list]
         if desc == "BERT":  # Change this line to crosses and dotted
-            plt.plot(vector_list, times, marker='x', linestyle='dashed', label=desc)
+            plt.plot(vector_list, times, marker='x', linestyle='dashed', label='BERT')
         else:
             plt.plot(vector_list, times, marker='o', label=desc)
     plt.title('Embeddings Classification Time')
     plt.xlabel('Vector Size')
     plt.ylabel('Time (sec)')
     plt.legend()
+    plt.tight_layout()
     if not os.path.exists('plots'):
         os.makedirs('plots')
     plt.savefig('plots/embeddings_stats_classifier_time_plot.svg', format='svg', dpi=300, transparent=True)
@@ -95,13 +104,14 @@ def plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_de
     for i, desc in enumerate(memory_descriptions):
         memories = [stats[1][i] for stats in stats_list]
         if desc == "BERT":  # Change this line to crosses and dotted
-            plt.plot(vector_list, memories, marker='x', linestyle='dashed', label=desc)
+            plt.plot(vector_list, memories, marker='x', linestyle='dashed', label='BERT')
         else:
             plt.plot(vector_list, memories, marker='o', label=desc)
     plt.title('Embeddings Classification Memory Usage')
     plt.xlabel('Vector Size')
     plt.ylabel('Memory (MB)')
     plt.legend()
+    plt.tight_layout()
     plt.savefig('plots/embeddings_stats_classifier_memory_plot.svg', format='svg', dpi=300, transparent=True)
     plt.savefig('plots/embeddings_stats_classifier_memory_plot.png', format='png', dpi=300, transparent=True)
     plt.close()
@@ -120,7 +130,7 @@ if __name__ == "__main__":
     ]
     vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
     time_descriptions_embedder = [
-        "FastText Training Time per Flow",
+        "FastText Training Time",
         "FastText Embeddings Creation Time per Flow",
         "BERT Embeddings Creation Time per Flow"
     ]
