@@ -10,6 +10,13 @@ from memory_profiler import profile, memory_usage
 import gc
 import create_plots
 
+# Mapping device names to their indices
+def map_device_name(file_paths):
+    device_names = [os.path.basename(fp).split('_')[0] for fp in file_paths]
+    unique_devices = sorted(set(device_names))
+    device_to_index = {device: idx for idx, device in enumerate(unique_devices)}
+    return device_to_index
+
 def classify_embeddings_random_forest(folder_path, output_name, vector_size):
     def load_embeddings(file_path):
         embeddings = []
@@ -32,23 +39,21 @@ def classify_embeddings_random_forest(folder_path, output_name, vector_size):
             print(f"The file at {file_path} was not found.")
         except Exception as e:
             print(f"An error occurred: {e}")
-    
-    # Test read specific line from the first file
-    test_file_path = os.path.join(folder_path, sorted(os.listdir(folder_path))[0])
-    test_line_number = 1
-    # test_vector = read_specific_line(test_file_path, test_line_number)
-    # if test_vector is not None:
-    #     print(f"Test vector from line {test_line_number} of {test_file_path}: {test_vector}")
 
     # List of file paths in the folder
     file_paths = [os.path.join(folder_path, fname) for fname in os.listdir(folder_path) if fname.endswith('.txt')]
 
+    # Map device names to indices
+    device_to_index = map_device_name(file_paths)
+
     # Load embeddings and labels
     all_embeddings = []
     all_labels = []
-    for i, file_path in enumerate(sorted(file_paths)):  # Sorted to ensure seen and unseen pairs are together
+    for file_path in sorted(file_paths):  # Sorted to ensure seen and unseen pairs are together
+        device_name = os.path.basename(file_path).split('_')[0]
+        device_index = device_to_index[device_name]
         device_embeddings = load_embeddings(file_path)
-        labels = [i // 2] * len(device_embeddings)
+        labels = [device_index] * len(device_embeddings)
         all_embeddings.extend(device_embeddings)
         all_labels.extend(labels)
 
@@ -82,25 +87,18 @@ def classify_embeddings_random_forest(folder_path, output_name, vector_size):
     # Evaluate the classifier
     accuracy = accuracy_score(y_test, y_pred)
     report = classification_report(y_test, y_pred)
+
+    # Confusion Matrix with device names as labels
     conf_matrix = confusion_matrix(y_test, y_pred)
-
-    print(f'Accuracy: {accuracy}')
-    print('Classification Report:')
-    print(report)
-
-    # Assuming `conf_matrix` is your confusion matrix array
-    # Calculate row-wise sums for normalization
-    row_sums = conf_matrix.sum(axis=1, keepdims=True)
-
-    # Normalize the confusion matrix to percentages
-    conf_matrix_percent = conf_matrix / row_sums
-
-    # Display the confusion matrix as percentages
-    disp = ConfusionMatrixDisplay(confusion_matrix=conf_matrix_percent, display_labels=np.unique(all_labels))
-    disp.plot(cmap=plt.cm.Blues, values_format=".2%")  # Format values as percentages with two decimal places
-    plt.title(f'Confusion Matrix - {output_name} {vector_size}')
-    plt.savefig(f'plots/{output_name}_confusion_matrix_{vector_size}_percent.png')  # Save figure with appropriate filename
-    plt.show()
+    conf_matrix_percent = conf_matrix.astype('float') / conf_matrix.sum(axis=1)[:, np.newaxis]  # Convert to percentage
+    device_names = sorted(device_to_index, key=device_to_index.get)
+    disp = ConfusionMatrixDisplay(confusion_matrix=conf_matrix_percent, display_labels=device_names)
+    disp.plot(cmap=plt.cm.Blues, values_format=".2f")  # Format values as floats with two decimal places
+    # plt.title(f'Confusion Matrix - {output_name}')
+    plt.title(f'Confusion Matrix - {" ".join(word.capitalize() for word in output_name.split("_"))}')
+    plt.savefig(f'plots/{output_name}_confusion_matrix_{vector_size}.png')  # Save figure with appropriate filename
+    # plt.show()
+    return accuracy
 
 def print_stats(stats_list, vector_list):
     print("-----------------------")
@@ -137,8 +135,8 @@ if __name__ == "__main__":
         file_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T2\ELEC 4952 - Thesis B\python\thesis_b'
     
     # vector_size = 768
-    # vector_list = [128, 256]
-    vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
+    vector_list = [128]
+    # vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
     stats_list = []
 
     time_descriptions = [
@@ -190,4 +188,3 @@ if __name__ == "__main__":
 
     print_stats(stats_list, vector_list)
     create_plots.plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_descriptions)
-    

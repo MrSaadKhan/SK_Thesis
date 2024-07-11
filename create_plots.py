@@ -116,51 +116,51 @@ def plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_de
     plt.savefig('plots/embeddings_stats_classifier_memory_plot.png', format='png', dpi=300, transparent=True)
     plt.close()
 
-if __name__ == "__main__":
-    # Example data for plot_graphs_embedder
-    stats_list_embedder = [
-        [(10.2, 15.5, 20.1), (100, 120, 130)],
-        [(8.5, 12.9, 18.7), (90, 110, 115)],
-        [(7.1, 10.8, 15.2), (80, 100, 105)],
-        [(6.2, 9.5, 13.8), (75, 95, 100)],
-        [(5.5, 8.7, 12.1), (70, 90, 95)],
-        [(4.8, 7.9, 10.5), (65, 85, 90)],
-        [(3.9, 6.5, 9.1), (60, 80, 85)],
-        [(3.2, 5.8, 7.8), (55, 75, 80)]
-    ]
-    vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
-    time_descriptions_embedder = [
-        "FastText Training Time",
-        "FastText Embeddings Creation Time per Flow",
-        "BERT Embeddings Creation Time per Flow"
-    ]
-    memory_descriptions_embedder = [
-        "FastText Training Memory Usage per Flow",
-        "FastText Embeddings Creation Memory Usage per Flow",
-        "BERT Embeddings Creation Memory Usage per Flow"
-    ]
+# if __name__ == "__main__":
+#     # Example data for plot_graphs_embedder
+#     stats_list_embedder = [
+#         [(10.2, 15.5, 20.1), (100, 120, 130)],
+#         [(8.5, 12.9, 18.7), (90, 110, 115)],
+#         [(7.1, 10.8, 15.2), (80, 100, 105)],
+#         [(6.2, 9.5, 13.8), (75, 95, 100)],
+#         [(5.5, 8.7, 12.1), (70, 90, 95)],
+#         [(4.8, 7.9, 10.5), (65, 85, 90)],
+#         [(3.9, 6.5, 9.1), (60, 80, 85)],
+#         [(3.2, 5.8, 7.8), (55, 75, 80)]
+#     ]
+#     vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
+#     time_descriptions_embedder = [
+#         "FastText Training Time",
+#         "FastText Embeddings Creation Time per Flow",
+#         "BERT Embeddings Creation Time per Flow"
+#     ]
+#     memory_descriptions_embedder = [
+#         "FastText Training Memory Usage per Flow",
+#         "FastText Embeddings Creation Memory Usage per Flow",
+#         "BERT Embeddings Creation Memory Usage per Flow"
+#     ]
 
-    plot_graphs_embedder(stats_list_embedder, vector_list, time_descriptions_embedder, memory_descriptions_embedder)
-    plot_fasttext_training(stats_list_embedder, vector_list)
+#     plot_graphs_embedder(stats_list_embedder, vector_list, time_descriptions_embedder, memory_descriptions_embedder)
+#     plot_fasttext_training(stats_list_embedder, vector_list)
 
-    # Example data for plot_graphs_classifier
-    stats_list_classifier = [
-        [(10.2, 15.5), (100, 120)],
-        [(8.5, 12.9), (90, 110)],
-        [(7.1, 10.8), (80, 100)],
-        [(6.2, 9.5), (75, 95)],
-        [(5.5, 8.7), (70, 90)],
-        [(4.8, 7.9), (65, 85)],
-        [(3.9, 6.5), (60, 80)],
-        [(3.2, 5.8), (55, 75)]
-    ]
-    time_descriptions_classifier = [
-        "FastText",
-        "BERT"
-    ]
-    memory_descriptions_classifier = [
-        "FastText",
-        "BERT"
-    ]
+#     # Example data for plot_graphs_classifier
+#     stats_list_classifier = [
+#         [(10.2, 15.5), (100, 120)],
+#         [(8.5, 12.9), (90, 110)],
+#         [(7.1, 10.8), (80, 100)],
+#         [(6.2, 9.5), (75, 95)],
+#         [(5.5, 8.7), (70, 90)],
+#         [(4.8, 7.9), (65, 85)],
+#         [(3.9, 6.5), (60, 80)],
+#         [(3.2, 5.8), (55, 75)]
+#     ]
+#     time_descriptions_classifier = [
+#         "FastText",
+#         "BERT"
+#     ]
+#     memory_descriptions_classifier = [
+#         "FastText",
+#         "BERT"
+#     ]
 
-    plot_graphs_classifier(stats_list_classifier, vector_list, time_descriptions_classifier, memory_descriptions_classifier)
+#     plot_graphs_classifier(stats_list_classifier, vector_list, time_descriptions_classifier, memory_descriptions_classifier)
