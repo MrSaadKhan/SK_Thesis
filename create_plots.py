@@ -2,12 +2,16 @@ import os
 import matplotlib.pyplot as plt
 
 def plot_graphs_embedder(stats_list, vector_list, time_descriptions, memory_descriptions):
-    # Create and save the Time plot
+    # Create and save the Embeddings Creation Time plot
     plt.figure(figsize=(12, 6))
     plt.grid(True)
     for i, desc in enumerate(time_descriptions):
-        times = [stats[0][i] for stats in stats_list]
-        plt.plot(vector_list, times, marker='o', label=desc)
+        if desc != "FastText Training Time per Flow":
+            times = [stats[0][i] for stats in stats_list]
+            if desc == "BERT Embeddings Creation Time per Flow":  # Change this line to crosses and dotted
+                plt.plot(vector_list, times, marker='x', linestyle='dashed', label=desc)
+            else:
+                plt.plot(vector_list, times, marker='o', label=desc)
     plt.title('Embeddings Creation Time')
     plt.xlabel('Vector Size')
     plt.ylabel('Time (sec)')
@@ -18,12 +22,16 @@ def plot_graphs_embedder(stats_list, vector_list, time_descriptions, memory_desc
     plt.savefig('plots/embeddings_stats_time_plot.png', format='png', dpi=300, transparent=True)
     plt.close()
 
-    # Create and save the Memory plot
+    # Create and save the Embeddings Creation Memory plot
     plt.figure(figsize=(12, 6))
     plt.grid(True)
     for i, desc in enumerate(memory_descriptions):
-        memories = [stats[1][i] for stats in stats_list]
-        plt.plot(vector_list, memories, marker='o', label=desc)
+        if desc != "FastText Training Memory Usage per Flow":
+            memories = [stats[1][i] for stats in stats_list]
+            if desc == "BERT Embeddings Creation Memory Usage per Flow":  # Change this line to crosses and dotted
+                plt.plot(vector_list, memories, marker='x', linestyle='dashed', label=desc)
+            else:
+                plt.plot(vector_list, memories, marker='o', label=desc)
     plt.title('Embeddings Creation Memory Usage')
     plt.xlabel('Vector Size')
     plt.ylabel('Memory (MB)')
@@ -32,13 +40,45 @@ def plot_graphs_embedder(stats_list, vector_list, time_descriptions, memory_desc
     plt.savefig('plots/embeddings_stats_memory_plot.png', format='png', dpi=300, transparent=True)
     plt.close()
 
+def plot_fasttext_training(stats_list, vector_list):
+    # Create and save the FastText Training Time plot
+    plt.figure(figsize=(12, 6))
+    plt.grid(True)
+    times = [stats[0][0] for stats in stats_list]  # Assuming FastText Training Time is the first in the list
+    plt.plot(vector_list, times, marker='o', label='FastText Training Time')
+    plt.title('Embeddings Creation Memory Usage')
+    plt.xlabel('Vector Size')
+    plt.ylabel('Time (sec)')
+    plt.legend()
+    if not os.path.exists('plots'):
+        os.makedirs('plots')
+    plt.savefig('plots/fasttext_training_time_plot.svg', format='svg', dpi=300, transparent=True)
+    plt.savefig('plots/fasttext_training_time_plot.png', format='png', dpi=300, transparent=True)
+    plt.close()
+
+    # Create and save the FastText Training Memory plot
+    plt.figure(figsize=(12, 6))
+    plt.grid(True)
+    memories = [stats[1][0] for stats in stats_list]  # Assuming FastText Training Memory Usage is the first in the list
+    plt.plot(vector_list, memories, marker='o', label='FastText Training Memory Usage per Flow')
+    plt.title('FastText Training Memory Usage')
+    plt.xlabel('Vector Size')
+    plt.ylabel('Memory (MB)')
+    plt.legend()
+    plt.savefig('plots/fasttext_training_memory_plot.svg', format='svg', dpi=300, transparent=True)
+    plt.savefig('plots/fasttext_training_memory_plot.png', format='png', dpi=300, transparent=True)
+    plt.close()
+
 def plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_descriptions):
-    # Create and save the Time plot
+    # Create and save the Classification Time plot
     plt.figure(figsize=(12, 6))
     plt.grid(True)
     for i, desc in enumerate(time_descriptions):
         times = [stats[0][i] for stats in stats_list]
-        plt.plot(vector_list, times, marker='o', label=desc)
+        if desc == "BERT":  # Change this line to crosses and dotted
+            plt.plot(vector_list, times, marker='x', linestyle='dashed', label=desc)
+        else:
+            plt.plot(vector_list, times, marker='o', label=desc)
     plt.title('Embeddings Classification Time')
     plt.xlabel('Vector Size')
     plt.ylabel('Time (sec)')
@@ -49,12 +89,15 @@ def plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_de
     plt.savefig('plots/embeddings_stats_classifier_time_plot.png', format='png', dpi=300, transparent=True)
     plt.close()
 
-    # Create and save the Memory plot
+    # Create and save the Classification Memory plot
     plt.figure(figsize=(12, 6))
     plt.grid(True)
     for i, desc in enumerate(memory_descriptions):
         memories = [stats[1][i] for stats in stats_list]
-        plt.plot(vector_list, memories, marker='o', label=desc)
+        if desc == "BERT":  # Change this line to crosses and dotted
+            plt.plot(vector_list, memories, marker='x', linestyle='dashed', label=desc)
+        else:
+            plt.plot(vector_list, memories, marker='o', label=desc)
     plt.title('Embeddings Classification Memory Usage')
     plt.xlabel('Vector Size')
     plt.ylabel('Memory (MB)')
@@ -88,6 +131,7 @@ if __name__ == "__main__":
     ]
 
     plot_graphs_embedder(stats_list_embedder, vector_list, time_descriptions_embedder, memory_descriptions_embedder)
+    plot_fasttext_training(stats_list_embedder, vector_list)
 
     # Example data for plot_graphs_classifier
     stats_list_classifier = [
