@@ -122,7 +122,7 @@ def plot_accuracy_vs_vector_size(data):
     plt.legend()
     plt.tight_layout()
     plt.grid(True)
-    plt.show()
+    # plt.show()
 
     if not os.path.exists('plots'):
         os.makedirs('plots')
@@ -135,6 +135,17 @@ def main(vector_list):
     if not os.path.exists(file_path):
         file_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T2\ELEC 4952 - Thesis B\python\thesis_b'
 
+    stats_list = []
+
+    time_descriptions = [
+        "FastText Embeddings Classification Total Time",
+        "BERT Embeddings Classification Total Time"
+    ]
+    memory_descriptions = [
+        "FastText Embeddings Classification Total Memory Usage",
+        "BERT Embeddings Classification Total Memory Usage"
+    ]
+
     embed_options = ["bert_embeddings", "fast_text_embeddings"]  # Embedding options
 
     accuracy_list = []  # List to store accuracies
@@ -142,11 +153,17 @@ def main(vector_list):
     for vector_size in vector_list:
         print(f"Classifying embeddings at vector size: {vector_size}")
 
+        bert_embeddings_classification_time = 0
+        bert_embeddings_classification_mem_usage = 0
+        fast_text_embeddings_classification_time = 0
+        fast_text_embeddings_classification_mem_usage = 0
+
         for option in embed_options:
             embed_name = f"{option}_{vector_size}"
             folder_path = os.path.join(file_path, embed_name)
 
             gc.collect()
+            start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
             start_time = time.time()
 
             if os.path.exists(folder_path):
@@ -154,12 +171,27 @@ def main(vector_list):
                 accuracy_list.append((vector_size, option, accuracy))
                 print(f"Accuracy for {embed_name}: {accuracy}")
 
+                if option.startswith("bert_embeddings"):
+                    bert_embeddings_classification_time = time.time() - start_time
+                    bert_embeddings_classification_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
+
+                if option.startswith("fast_text_embeddings"):
+                    fast_text_embeddings_classification_time = time.time() - start_time
+                    fast_text_embeddings_classification_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
+
             else:
                 print(f"{embed_name} does not exist!")
 
             print(f"Time taken: {time.time() - start_time:.2f} seconds")
 
+    stats_list.append((
+    (fast_text_embeddings_classification_time, bert_embeddings_classification_time),
+    (fast_text_embeddings_classification_mem_usage, bert_embeddings_classification_mem_usage)
+    ))
+    print(stats_list)
     plot_accuracy_vs_vector_size(accuracy_list)
+    create_plots.plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_descriptions)
+
 
 if __name__ == "__main__":
     vector_list = [128, 768]

@@ -63,19 +63,19 @@ def plot_fasttext_training(stats_list, vector_list):
     plt.savefig('plots/fasttext_training_time_plot.png', format='png', dpi=300, transparent=True)
     plt.close()
 
-    # Create and save the FastText Training Memory plot
-    plt.figure(figsize=(12, 6))
-    plt.grid(True)
-    memories = [stats[1][0] for stats in stats_list]  # Assuming FastText Training Memory Usage is the first in the list
-    plt.plot(vector_list, memories, marker='o', label='FastText Training')
-    plt.title('FastText Training Memory Usage')
-    plt.xlabel('Vector Size')
-    plt.ylabel('Memory (MB)')
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig('plots/fasttext_training_memory_plot.svg', format='svg', dpi=300, transparent=True)
-    plt.savefig('plots/fasttext_training_memory_plot.png', format='png', dpi=300, transparent=True)
-    plt.close()
+    # # Create and save the FastText Training Memory plot
+    # plt.figure(figsize=(12, 6))
+    # plt.grid(True)
+    # memories = [stats[1][0] for stats in stats_list]  # Assuming FastText Training Memory Usage is the first in the list
+    # plt.plot(vector_list, memories, marker='o', label='FastText Training')
+    # plt.title('FastText Training Memory Usage')
+    # plt.xlabel('Vector Size')
+    # plt.ylabel('Memory (MB)')
+    # plt.legend()
+    # plt.tight_layout()
+    # plt.savefig('plots/fasttext_training_memory_plot.svg', format='svg', dpi=300, transparent=True)
+    # plt.savefig('plots/fasttext_training_memory_plot.png', format='png', dpi=300, transparent=True)
+    # plt.close()
 
 def plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_descriptions):
     # Create and save the Classification Time plot
