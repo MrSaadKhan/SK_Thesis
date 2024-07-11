@@ -1,12 +1,12 @@
 import numpy as np
 import os
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, accuracy_score, confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from tqdm import tqdm  # Import tqdm for progress bars
 import time
-from memory_profiler import profile, memory_usage
+from memory_profiler import memory_usage
 import gc
 import create_plots
 
@@ -25,20 +25,6 @@ def classify_embeddings_random_forest(folder_path, output_name, vector_size):
                 vector = np.array([float(x) for x in line.strip().split()])
                 embeddings.append(vector)
         return embeddings
-
-    def read_specific_line(file_path, line_number):
-        try:
-            with open(file_path, 'r', encoding='utf-8') as file:
-                for current_line_number, line in enumerate(file, start=1):
-                    if current_line_number == line_number:
-                        vector = line.strip().split()  # Split the line into a list of values
-                        vector = [float(value) for value in vector]  # Convert values to float
-                        return np.array(vector)  # Convert to numpy array and return
-            print(f"Line {line_number} does not exist in the file.")
-        except FileNotFoundError:
-            print(f"The file at {file_path} was not found.")
-        except Exception as e:
-            print(f"An error occurred: {e}")
 
     # List of file paths in the folder
     file_paths = [os.path.join(folder_path, fname) for fname in os.listdir(folder_path) if fname.endswith('.txt')]
@@ -86,7 +72,7 @@ def classify_embeddings_random_forest(folder_path, output_name, vector_size):
     print(f"Evaluation of RF classifier at a vector size of {vector_size}")
     # Evaluate the classifier
     accuracy = accuracy_score(y_test, y_pred)
-    report = classification_report(y_test, y_pred)
+    # report = classification_report(y_test, y_pred)
 
     # Confusion Matrix with device names as labels
     conf_matrix = confusion_matrix(y_test, y_pred)
@@ -97,94 +83,41 @@ def classify_embeddings_random_forest(folder_path, output_name, vector_size):
     # plt.title(f'Confusion Matrix - {output_name}')
     plt.title(f'Confusion Matrix - {" ".join(word.capitalize() for word in output_name.split("_"))}')
     plt.savefig(f'plots/{output_name}_confusion_matrix_{vector_size}.png')  # Save figure with appropriate filename
-    # plt.show()
+    plt.show()
     return accuracy
 
-def print_stats(stats_list, vector_list):
-    print("-----------------------")
-
-    # Define descriptions for each item in times and memories
-    time_descriptions = [
-        "FastText Embeddings Classification Total Time",
-        "BERT Embeddings Classification Total Time"
-    ]
-    memory_descriptions = [
-        "FastText Embeddings Classification Total Memory Usage",
-        "BERT Embeddings Classification Total Memory Usage"
-    ]
-
-    # Printing the stats
-    for vector, (times, memories) in zip(vector_list, stats_list):
-        print(f"Stats for category: {vector}")
-
-        # Print times with descriptions
-        print("Times (sec):")
-        for desc, item in zip(time_descriptions, times):
-            print(f"{desc}: {item}")
-
-        # Print memories with descriptions
-        print("Memories (MB):")
-        for desc, item in zip(memory_descriptions, memories):
-            print(f"{desc}: {item}")
-
-        print("-----------------------")
-
-if __name__ == "__main__":
-    file_path = r'/home/iotresearch/saad/FastTextExp/thesis_b' 
+def main():
+    file_path = r'/home/iotresearch/saad/FastTextExp/thesis_b'
     if not os.path.exists(file_path):
         file_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T2\ELEC 4952 - Thesis B\python\thesis_b'
-    
-    # vector_size = 768
-    vector_list = [128]
-    # vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
-    stats_list = []
 
-    time_descriptions = [
-        "FastText Embeddings Classification Total Time",
-        "BERT Embeddings Classification Total Time"
-    ]
-    memory_descriptions = [
-        "FastText Embeddings Classification Total Memory Usage",
-        "BERT Embeddings Classification Total Memory Usage"
-    ]
+    vector_list = [128]  # Vector sizes to evaluate
+    embed_options = ["bert_embeddings", "fast_text_embeddings"]  # Embedding options
+
+    accuracy_list = []  # List to store accuracies
 
     for vector_size in vector_list:
         print(f"Classifying embeddings at vector size: {vector_size}")
 
-        embed_option = ["bert_embeddings", "fast_text_embeddings"]
-        embed_option = [f"{option}_{vector_size}" for option in embed_option]
-
-        bert_embeddings_classification_time = 0
-        bert_embeddings_classification_mem_usage = 0
-        fast_text_embeddings_classification_time = 0
-        fast_text_embeddings_classification_mem_usage = 0
-
-        for option in embed_option:
-            folder_path = os.path.join(file_path, option)
+        for option in embed_options:
+            embed_name = f"{option}_{vector_size}"
+            folder_path = os.path.join(file_path, embed_name)
 
             gc.collect()
-            start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
             start_time = time.time()
 
             if os.path.exists(folder_path):
-                classify_embeddings_random_forest(folder_path, option, vector_size)
-
-                if option.startswith("bert_embeddings"):
-                    bert_embeddings_classification_time = time.time() - start_time
-                    bert_embeddings_classification_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
-
-                if option.startswith("fast_text_embeddings"):
-                    fast_text_embeddings_classification_time = time.time() - start_time
-                    fast_text_embeddings_classification_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
+                accuracy = classify_embeddings_random_forest(folder_path, embed_name, vector_size)
+                accuracy_list.append((vector_size, option, accuracy))
+                print(f"Accuracy for {embed_name}: {accuracy}")
 
             else:
-                print(f"{option} does not exist!")
+                print(f"{embed_name} does not exist!")
 
+            print(f"Time taken: {time.time() - start_time:.2f} seconds")
 
-        stats_list.append((
-            (fast_text_embeddings_classification_time, bert_embeddings_classification_time),
-            (fast_text_embeddings_classification_mem_usage, bert_embeddings_classification_mem_usage)
-        ))
+    print("Accuracies:")
+    print(accuracy_list)
 
-    print_stats(stats_list, vector_list)
-    create_plots.plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_descriptions)
+if __name__ == "__main__":
+    main()
