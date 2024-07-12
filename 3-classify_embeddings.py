@@ -6,9 +6,10 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from tqdm import tqdm  # Import tqdm for progress bars
 import time
-from memory_profiler import memory_usage
+# from memory_profiler import memory_usage
 import gc
 import create_plots
+import joblib
 
 # Mapping device names to their indices
 def map_device_name(file_paths):
@@ -22,6 +23,47 @@ def map_device_name(file_paths):
     unique_devices = sorted(set(device_names))
     device_to_index = {device: idx for idx, device in enumerate(unique_devices)}
     return device_to_index
+
+def plot_device_names(input_list):
+    # Dictionary mapping device names to plot names
+    input_output_map = {
+    "Amazon Echo Gen2"                      : "Amazon Echo Gen2",
+    "Au Network Camera"                     : "Network Camera",
+    "Au Wireless Adapter"                   : "Wireless Adapter",
+    "Bitfinder Awair Breathe Easy"          : "Bitfinder Smart Air Monitor",
+    "Candy House Sesami Wi-fi Access Point" : "Candy House Wi-Fi AP",
+    "Google Home Gen1"                      : "Google Home Gen1",
+    "I-o Data Qwatch"                       : "IO Data Camera",
+    "Irobot Roomba"                         : "iRobot Roomba",
+    "Jvc Kenwood Cu-hb1"                    : "JVC Smart Home Hub",
+    "Jvc Kenwood Hdtv Ip Camera"            : "JVC Camera",
+    "Line Clova Wave"                       : "Line Smart Speaker",
+    "Link Japan Eremote"                    : "Link eRemote",
+    "Mouse Computer Room Hub"               : "Mouse Computer Room Hub",
+    "Nature Remo"                           : "Nature Smart Remote",
+    "Panasonic Doorphone"                   : "Panasonic Doorphone",
+    "Philips Hue Bridge"                    : "Philips Hue Light",
+    "Planex Camera One Shot!"               : "Planex Camera",
+    "Planex Smacam Outdoor"                 : "Planex Outdoor Camera",
+    "Planex Smacam Pantilt"                 : "Planex PanTilt Camera",
+    "Powerelectric Wi-fi Plug"              : "PowerElectric Wi-Fi Plug",
+    "Qrio Hub"                              : "Qrio Hub",
+    "Sony Bravia"                           : "Sony Bravia",
+    "Sony Network Camera"                   : "Sony Network Camera",
+    "Sony Smart Speaker"                    : "Sony Smart Speaker",
+    "Xiaomi Mijia Led"                      : "Xiaomi Mijia LED"
+    }
+
+    output_list = []
+    for input_string in input_list:
+        output = input_output_map.get(input_string)
+        if output is None:
+            print(f"Input {input_string} not found")
+            output_list.append("")
+        else:
+            output_list.append(output)
+    
+    return output_list
 
 def classify_embeddings_random_forest(folder_path, output_name, vector_size):
     def load_embeddings(file_path):
@@ -84,29 +126,44 @@ def classify_embeddings_random_forest(folder_path, output_name, vector_size):
 
     print(f"Evaluation of RF classifier at a vector size of {vector_size}")
     # Evaluate the classifier
-    accuracy = accuracy_score(y_test, y_pred)
+    # accuracy = accuracy_score(y_test, y_pred)
     # report = classification_report(y_test, y_pred)
 
     # Confusion Matrix with device names as labels
     conf_matrix = confusion_matrix(y_test, y_pred)
     conf_matrix_percent = conf_matrix.astype('float') / conf_matrix.sum(axis=1)[:, np.newaxis]  # Convert to percentage
+    accuracy = np.mean(np.diag(conf_matrix_percent))
+
     device_names = sorted(device_to_index, key=device_to_index.get)
+
+    device_names = plot_device_names(device_names)
+
     disp = ConfusionMatrixDisplay(confusion_matrix=conf_matrix_percent, display_labels=device_names)
     
     # Plotting the confusion matrix with labels and transparent background
     fig, ax = plt.subplots(figsize=(8, 6))
     disp.plot(cmap=plt.cm.Blues, ax=ax, values_format=".2f")
-    ax.set_title(f'Confusion Matrix - {" ".join(word.capitalize() for word in output_name.split("_"))}')
+    # ax.set_title(f'Confusion Matrix - {" ".join(word.capitalize() for word in output_name.split("_"))}')
     ax.set_xlabel('Predicted Label')
     ax.set_ylabel('True Label')
-    ax.set_xticklabels(device_names, rotation=45)
+    ax.set_xticklabels(device_names, rotation=90)
     ax.set_yticklabels(device_names)
     plt.tight_layout()
     ax.figure.savefig(f'plots/{output_name}_confusion_matrix_{vector_size}.png', dpi=300, transparent=True)
     ax.figure.savefig(f'plots/{output_name}_confusion_matrix_{vector_size}.svg', dpi=300, transparent=True)
+    ax.figure.savefig(f'plots/{output_name}_confusion_matrix_{vector_size}.pdf', dpi=300, transparent=True)
     # plt.show()
 
-    return accuracy
+    folder_path_rf = './rfmodels/'
+    os.makedirs(folder_path_rf, exist_ok=True)
+
+    model_file = os.path.join(folder_path_rf, f'{output_name}_random_forest_model.pkl')
+    joblib.dump(clf, model_file)
+
+    file_size_bytes = os.path.getsize(model_file)
+    file_size = file_size_bytes / (1024 * 1024)
+
+    return accuracy, file_size
 
 def plot_accuracy_vs_vector_size(data):
     bert_data = [item for item in data if item[1] == 'bert_embeddings']
@@ -129,6 +186,8 @@ def plot_accuracy_vs_vector_size(data):
 
     plt.savefig('plots/classifier_accuracy.png', format='png', dpi=300, transparent=True)
     plt.savefig('plots/classifier_accuracy.svg', format='svg', dpi=300, transparent=True)
+    plt.savefig('plots/classifier_accuracy.pdf', format='pdf', dpi=300, transparent=True)
+
 
 def main(vector_list):
     file_path = r'/home/iotresearch/saad/FastTextExp/thesis_b'
@@ -138,12 +197,12 @@ def main(vector_list):
     stats_list = []
 
     time_descriptions = [
-        "FastText Embeddings Classification Total Time",
-        "BERT Embeddings Classification Total Time"
+        "FastText",
+        "BERT"
     ]
     memory_descriptions = [
-        "FastText Embeddings Classification Total Memory Usage",
-        "BERT Embeddings Classification Total Memory Usage"
+        "FastText",
+        "BERT"
     ]
 
     embed_options = ["bert_embeddings", "fast_text_embeddings"]  # Embedding options
@@ -161,23 +220,24 @@ def main(vector_list):
         for option in embed_options:
             embed_name = f"{option}_{vector_size}"
             folder_path = os.path.join(file_path, embed_name)
+            memory = 0
 
             gc.collect()
-            start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
+            # start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
             start_time = time.time()
 
             if os.path.exists(folder_path):
-                accuracy = classify_embeddings_random_forest(folder_path, embed_name, vector_size)
+                accuracy, memory = classify_embeddings_random_forest(folder_path, embed_name, vector_size)
                 accuracy_list.append((vector_size, option, accuracy))
                 print(f"Accuracy for {embed_name}: {accuracy}")
 
                 if option.startswith("bert_embeddings"):
                     bert_embeddings_classification_time = time.time() - start_time
-                    bert_embeddings_classification_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
+                    bert_embeddings_classification_mem_usage = memory
 
                 if option.startswith("fast_text_embeddings"):
                     fast_text_embeddings_classification_time = time.time() - start_time
-                    fast_text_embeddings_classification_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
+                    fast_text_embeddings_classification_mem_usage = memory
 
             else:
                 print(f"{embed_name} does not exist!")
@@ -194,5 +254,5 @@ def main(vector_list):
 
 
 if __name__ == "__main__":
-    vector_list = [128, 768]
+    vector_list = [128, 256, 512, 768]
     main(vector_list)

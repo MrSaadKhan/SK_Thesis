@@ -14,15 +14,16 @@ def plot_graphs_embedder(stats_list, vector_list, time_descriptions, memory_desc
         else:
             times = [stats[0][i] for stats in stats_list]
             plt.plot(vector_list, times, marker='o', label='FastText')
-    plt.title('Embeddings Creation Time')
+    # plt.title('Embeddings Creation Time')
     plt.xlabel('Vector Size')
     plt.ylabel('Time (sec)')
     plt.legend()
     plt.tight_layout()
     if not os.path.exists('plots'):
         os.makedirs('plots')
-    plt.savefig('plots/embeddings_stats_time_plot.svg', format='svg', dpi=300, transparent=True)
-    plt.savefig('plots/embeddings_stats_time_plot.png', format='png', dpi=300, transparent=True)
+    plt.savefig('plots/embeddings_creation_time_plot.svg', format='svg', dpi=300, transparent=True)
+    plt.savefig('plots/embeddings_creation_time_plot.png', format='png', dpi=300, transparent=True)
+    plt.savefig('plots/embeddings_creation_time_plot.pdf', format='pdf', dpi=300, transparent=True)
     plt.close()
 
     # Create and save the Embeddings Creation Memory plot
@@ -37,13 +38,14 @@ def plot_graphs_embedder(stats_list, vector_list, time_descriptions, memory_desc
         else:
             memories = [stats[1][i] for stats in stats_list]
             plt.plot(vector_list, memories, marker='o', label='FastText')
-    plt.title('Embeddings Creation Memory Usage')
+    # plt.title('Embeddings Creation Memory Usage')
     plt.xlabel('Vector Size')
     plt.ylabel('Memory (MB)')
     plt.legend()
     plt.tight_layout()
-    plt.savefig('plots/embeddings_stats_memory_plot.svg', format='svg', dpi=300, transparent=True)
-    plt.savefig('plots/embeddings_stats_memory_plot.png', format='png', dpi=300, transparent=True)
+    plt.savefig('plots/embeddings_creation_memory_plot.svg', format='svg', dpi=300, transparent=True)
+    plt.savefig('plots/embeddings_creation_memory_plot.png', format='png', dpi=300, transparent=True)
+    plt.savefig('plots/embeddings_creation_memory_plot.pdf', format='pdf', dpi=300, transparent=True)
     plt.close()
 
 def plot_fasttext_training(stats_list, vector_list):
@@ -52,7 +54,7 @@ def plot_fasttext_training(stats_list, vector_list):
     plt.grid(True)
     times = [stats[0][0] for stats in stats_list]  # Assuming FastText Training Time is the first in the list
     plt.plot(vector_list, times, marker='o', label='FastText Training')
-    plt.title('FastText Training Time')
+    # plt.title('FastText Training Time')
     plt.xlabel('Vector Size')
     plt.ylabel('Time (sec)')
     plt.legend()
@@ -61,21 +63,24 @@ def plot_fasttext_training(stats_list, vector_list):
         os.makedirs('plots')
     plt.savefig('plots/fasttext_training_time_plot.svg', format='svg', dpi=300, transparent=True)
     plt.savefig('plots/fasttext_training_time_plot.png', format='png', dpi=300, transparent=True)
+    plt.savefig('plots/fasttext_training_time_plot.pdf', format='pdf', dpi=300, transparent=True)
+
     plt.close()
 
-    # # Create and save the FastText Training Memory plot
-    # plt.figure(figsize=(12, 6))
-    # plt.grid(True)
-    # memories = [stats[1][0] for stats in stats_list]  # Assuming FastText Training Memory Usage is the first in the list
-    # plt.plot(vector_list, memories, marker='o', label='FastText Training')
+    # Create and save the FastText Training Memory plot
+    plt.figure(figsize=(12, 6))
+    plt.grid(True)
+    memories = [stats[1][0] for stats in stats_list]  # Assuming FastText Training Memory Usage is the first in the list
+    plt.plot(vector_list, memories, marker='o', label='FastText Training')
     # plt.title('FastText Training Memory Usage')
-    # plt.xlabel('Vector Size')
-    # plt.ylabel('Memory (MB)')
-    # plt.legend()
-    # plt.tight_layout()
-    # plt.savefig('plots/fasttext_training_memory_plot.svg', format='svg', dpi=300, transparent=True)
-    # plt.savefig('plots/fasttext_training_memory_plot.png', format='png', dpi=300, transparent=True)
-    # plt.close()
+    plt.xlabel('Vector Size')
+    plt.ylabel('Memory (MB)')
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig('plots/fasttext_training_memory_plot.svg', format='svg', dpi=300, transparent=True)
+    plt.savefig('plots/fasttext_training_memory_plot.png', format='png', dpi=300, transparent=True)
+    plt.savefig('plots/fasttext_training_memory_plot.pdf', format='pdf', dpi=300, transparent=True)
+    plt.close()
 
 def plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_descriptions):
     # Create and save the Classification Time plot
@@ -87,15 +92,16 @@ def plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_de
             plt.plot(vector_list, times, marker='x', linestyle='dashed', label='BERT')
         else:
             plt.plot(vector_list, times, marker='o', label=desc)
-    plt.title('Embeddings Classification Time')
+    # plt.title('Embeddings Classification Time')
     plt.xlabel('Vector Size')
     plt.ylabel('Time (sec)')
     plt.legend()
     plt.tight_layout()
     if not os.path.exists('plots'):
         os.makedirs('plots')
-    plt.savefig('plots/embeddings_stats_classifier_time_plot.svg', format='svg', dpi=300, transparent=True)
-    plt.savefig('plots/embeddings_stats_classifier_time_plot.png', format='png', dpi=300, transparent=True)
+    plt.savefig('plots/embeddings_classifier_time_plot.svg', format='svg', dpi=300, transparent=True)
+    plt.savefig('plots/embeddings_classifier_time_plot.png', format='png', dpi=300, transparent=True)
+    plt.savefig('plots/embeddings_classifier_time_plot.pdf', format='pdf', dpi=300, transparent=True)
     plt.close()
 
     # Create and save the Classification Memory plot
@@ -112,8 +118,9 @@ def plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_de
     plt.ylabel('Memory (MB)')
     plt.legend()
     plt.tight_layout()
-    plt.savefig('plots/embeddings_stats_classifier_memory_plot.svg', format='svg', dpi=300, transparent=True)
-    plt.savefig('plots/embeddings_stats_classifier_memory_plot.png', format='png', dpi=300, transparent=True)
+    plt.savefig('plots/embeddings_classifier_memory_plot.svg', format='svg', dpi=300, transparent=True)
+    plt.savefig('plots/embeddings_classifier_memory_plot.png', format='png', dpi=300, transparent=True)
+    plt.savefig('plots/embeddings_classifier_memory_plot.pdf', format='pdf', dpi=300, transparent=True)
     plt.close()
 
 # if __name__ == "__main__":
