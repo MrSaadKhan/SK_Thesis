@@ -6,9 +6,9 @@ def plot_graphs_embedder(stats_list, vector_list, time_descriptions, memory_desc
     plt.figure(figsize=(12, 6))
     plt.grid(True)
     for i, desc in enumerate(time_descriptions):
-        if desc == "FastText Training Time":
+        if desc == "FastText Training":
             continue  # Skip plotting FastText Training Time
-        elif desc == "BERT Embeddings Creation Time per Flow":
+        elif desc == "BERT":
             times = [stats[0][i] for stats in stats_list]
             plt.plot(vector_list, times, marker='x', linestyle='dashed', label='BERT')
         else:
@@ -30,9 +30,9 @@ def plot_graphs_embedder(stats_list, vector_list, time_descriptions, memory_desc
     plt.figure(figsize=(12, 6))
     plt.grid(True)
     for i, desc in enumerate(memory_descriptions):
-        if desc == "FastText Training Memory Usage per Flow":
+        if desc == "FastText Training":
             continue  # Skip plotting FastText Training Memory Usage per Flow
-        elif desc == "BERT Embeddings Creation Memory Usage per Flow":
+        elif desc == "BERT":
             memories = [stats[1][i] for stats in stats_list]
             plt.plot(vector_list, memories, marker='x', linestyle='dashed', label='BERT')
         else:
