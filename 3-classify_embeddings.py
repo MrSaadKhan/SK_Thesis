@@ -244,10 +244,10 @@ def main(vector_list):
 
             print(f"Time taken: {time.time() - start_time:.2f} seconds")
 
-    stats_list.append((
-    (fast_text_embeddings_classification_time, bert_embeddings_classification_time),
-    (fast_text_embeddings_classification_mem_usage, bert_embeddings_classification_mem_usage)
-    ))
+        stats_list.append((
+        (fast_text_embeddings_classification_time, bert_embeddings_classification_time),
+        (fast_text_embeddings_classification_mem_usage, bert_embeddings_classification_mem_usage)
+        ))
     print(stats_list)
     plot_accuracy_vs_vector_size(accuracy_list)
     create_plots.plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_descriptions)
