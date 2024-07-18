@@ -175,7 +175,7 @@ def plot_accuracy_vs_vector_size(data):
 
     plt.xlabel('Vector Size')
     plt.ylabel('Accuracy')
-    plt.title('Accuracy vs Vector Size')
+    # plt.title('Accuracy vs Vector Size')
     plt.legend()
     plt.tight_layout()
     plt.grid(True)

@@ -113,7 +113,7 @@ def plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_de
             plt.plot(vector_list, memories, marker='x', linestyle='dashed', label='BERT')
         else:
             plt.plot(vector_list, memories, marker='o', label=desc)
-    plt.title('Embeddings Classification Memory Usage')
+    # plt.title('Embeddings Classification Memory Usage')
     plt.xlabel('Vector Size')
     plt.ylabel('Memory (MB)')
     plt.legend()

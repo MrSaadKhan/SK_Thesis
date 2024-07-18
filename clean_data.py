@@ -19,6 +19,9 @@ def clean_data(target_file):
         destination_ips = chunk['flows'].apply(lambda x: ipaddress.IPv4Address(x['destinationIPv4Address']))
         chunk = chunk[~(destination_ips.apply(lambda x: x.is_multicast) | destination_ips.apply(lambda x: x.is_private))]
      
+        # Remove sourceMacAddress, destinationMacAddress, and sourceIPv4Address from flows
+        chunk['flows'] = chunk['flows'].apply(lambda x: {k: v for k, v in x.items() if k not in ['sourceMacAddress', 'destinationMacAddress', 'sourceIPv4Address']})
+        
         df1 = pd.DataFrame(chunk)
         df1 = df1[["flows"]]
         #output.extend(chunk)
@@ -33,4 +36,5 @@ def clean_data(target_file):
     #num_elements = sum(1 for sublist in output1 if sublist[0] is not None)
     num_elements = len(list(filter(lambda x: x[0] is not None, output1)))
     print(str(num_elements) +' '+'flows!')
+    print(output1)
     return output1, num_elements
