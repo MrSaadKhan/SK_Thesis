@@ -36,5 +36,5 @@ def clean_data(target_file):
     #num_elements = sum(1 for sublist in output1 if sublist[0] is not None)
     num_elements = len(list(filter(lambda x: x[0] is not None, output1)))
     print(str(num_elements) +' '+'flows!')
-    print(output1)
+    # print(output1)
     return output1, num_elements
