@@ -7,7 +7,7 @@ import numpy as np
 def train_fasttext_model(file_path, device_list, word_embedding_option=1, embedding_size=768):
     
     # Remove ".json" from each device name
-    cleaned_device_list = [device.replace(".json", "") for device in device_list]
+    cleaned_device_list = ["_".join(device.replace(".json", "").split('_')[:-1]) for device in device_list]
 
     # Create the filename
     model_filename = "_".join(cleaned_device_list) + "_fasttext_model" + "_" + str(embedding_size)
