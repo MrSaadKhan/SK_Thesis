@@ -17,6 +17,7 @@ def plot_graphs_embedder(stats_list, vector_list, time_descriptions, memory_desc
     # plt.title('Embeddings Creation Time')
     plt.xlabel('Vector Size')
     plt.ylabel('Time (sec)')
+    plt.yscale('log')
     plt.legend()
     plt.tight_layout()
     if not os.path.exists('plots'):
@@ -82,12 +83,17 @@ def plot_fasttext_training(stats_list, vector_list):
     plt.savefig('plots/fasttext_training_memory_plot.pdf', format='pdf', dpi=300, transparent=True)
     plt.close()
 
-def plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_descriptions):
+def plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_descriptions, training_length = 1, testing_length = 1):
+
+    if training_length == 1 or testing_length == 1:
+        print("Warning: only 1 instance or taking for all flows!")
+
     # Create and save the Classification Time plot
     plt.figure(figsize=(12, 6))
     plt.grid(True)
     for i, desc in enumerate(time_descriptions):
         times = [stats[0][i] for stats in stats_list]
+        times = [time / (testing_length) for time in times]
         if desc == "BERT":  # Change this line to crosses and dotted
             plt.plot(vector_list, times, marker='x', linestyle='dashed', label='BERT')
         else:
@@ -109,6 +115,7 @@ def plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_de
     plt.grid(True)
     for i, desc in enumerate(memory_descriptions):
         memories = [stats[1][i] for stats in stats_list]
+        memories = [memories / (testing_length) for time in times]
         if desc == "BERT":  # Change this line to crosses and dotted
             plt.plot(vector_list, memories, marker='x', linestyle='dashed', label='BERT')
         else:

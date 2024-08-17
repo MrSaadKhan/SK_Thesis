@@ -66,6 +66,7 @@ def plot_device_names(input_list):
     return output_list
 
 def classify_embeddings_random_forest(folder_path, output_name, vector_size):
+    
     def load_embeddings(file_path):
         embeddings = []
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -104,8 +105,9 @@ def classify_embeddings_random_forest(folder_path, output_name, vector_size):
 
     # Split into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(all_embeddings, all_labels, test_size=0.2, stratify=all_labels, random_state=42)
-    print(f'Training set size: {len(X_train)}')
-    print(f'Testing set size: {len(X_test)}')
+    
+    training_length = len(X_train)
+    testing_length  = len(X_test)
 
     # Initialize and train the Random Forest classifier
     clf = RandomForestClassifier(n_estimators=100, random_state=42)
@@ -115,8 +117,8 @@ def classify_embeddings_random_forest(folder_path, output_name, vector_size):
     print('Training completed.')
 
     # Print lengths of training and testing data used for classification
-    print(f'Training data length for classification: {len(X_train)}')
-    print(f'Testing data length for classification: {len(X_test)}')
+    print(f'Training data length for classification: {training_length}')
+    print(f'Testing data length for classification: {testing_length}')
 
     # Make predictions with progress bar
     y_pred = []
@@ -163,15 +165,15 @@ def classify_embeddings_random_forest(folder_path, output_name, vector_size):
     file_size_bytes = os.path.getsize(model_file)
     file_size = file_size_bytes / (1024 * 1024)
 
-    return accuracy, file_size
+    return accuracy, file_size, training_length, testing_length
 
 def plot_accuracy_vs_vector_size(data):
     bert_data = [item for item in data if item[1] == 'bert_embeddings']
     fasttext_data = [item for item in data if item[1] == 'fast_text_embeddings']
 
-    plt.figure(figsize=(8, 6))
-    plt.plot([item[0] for item in bert_data], [item[2] for item in bert_data], marker='x', linestyle='-', color='b', label='BERT')
-    plt.plot([item[0] for item in fasttext_data], [item[2] for item in fasttext_data], marker='o', linestyle='--', color='r', label='FastText')
+    plt.figure(figsize=(12, 6))
+    plt.plot([item[0] for item in bert_data], [item[2] for item in bert_data], marker='x', linestyle='dashed', label='BERT')
+    plt.plot([item[0] for item in fasttext_data], [item[2] for item in fasttext_data], marker='o', label='FastText')
 
     plt.xlabel('Vector Size')
     plt.ylabel('Accuracy')
@@ -227,7 +229,7 @@ def main(vector_list):
             start_time = time.time()
 
             if os.path.exists(folder_path):
-                accuracy, memory = classify_embeddings_random_forest(folder_path, embed_name, vector_size)
+                accuracy, memory, training_length, testing_length = classify_embeddings_random_forest(folder_path, embed_name, vector_size)
                 accuracy_list.append((vector_size, option, accuracy))
                 print(f"Accuracy for {embed_name}: {accuracy}")
 
@@ -250,7 +252,7 @@ def main(vector_list):
         ))
     print(stats_list)
     plot_accuracy_vs_vector_size(accuracy_list)
-    create_plots.plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_descriptions)
+    create_plots.plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_descriptions, training_length, testing_length)
 
 
 if __name__ == "__main__":
