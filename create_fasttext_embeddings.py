@@ -4,18 +4,24 @@ from gensim.utils import simple_preprocess
 import prepare_data
 import numpy as np
 
-def train_fasttext_model(file_path, device_list, word_embedding_option=1, embedding_size=768):
-    
-    # Remove ".json" from each device name
-    cleaned_device_list = ["_".join(device.replace(".json", "").split('_')[:-1]) for device in device_list]
+def train_fasttext_model(file_path, device_list, save_dir, word_embedding_option=1, embedding_size=768):
+
+    if word_embedding_option == 1:
+        word_embed = "Ungrouped"
+    else:
+        word_embed = "Grouped"
 
     # Create the filename
-    model_filename = "_".join(cleaned_device_list) + "_fasttext_model" + "_" + str(embedding_size)
+    model_filename = "fasttext_model" + "_" + str(embedding_size)
+
+    save_dir = os.path.join(save_dir, word_embed, model_filename)
 
     # Check if the model already exists
-    if os.path.exists(model_filename):
+    if os.path.exists(save_dir):
         print(f'\033[92mModel already exists: {model_filename} ✔\033[0m')
         return model_filename
+    else:
+        os.makedirs(save_dir)
     
     dev1_seen = []
     dev1_seen_word = []
@@ -38,7 +44,7 @@ def train_fasttext_model(file_path, device_list, word_embedding_option=1, embedd
         model = FastText(sentences=[sentence[0] for sentence in dev1_seen], vector_size=embedding_size, window=5, min_count=1, workers=4)
     print('\033[92mFastText model created ✔\033[0m')
 
-    model.save(model_filename)
+    model.save(save_dir)
     print(f'\033[92mFastText model saved as {model_filename} ✔\033[0m')
 
     return model_filename

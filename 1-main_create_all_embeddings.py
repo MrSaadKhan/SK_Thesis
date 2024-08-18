@@ -7,7 +7,7 @@ from memory_profiler import profile, memory_usage
 import gc
 
 @profile
-def main(vector_size = 768):
+def main(device_low, device_high, save_dir, vector_size = 768):
     # Directory path to read files from
     file_path = r'/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix'
 
@@ -24,8 +24,7 @@ def main(vector_size = 768):
     # Sort devices by file size
     devices_sorted = sorted(filtered_devices, key=lambda device: os.path.getsize(os.path.join(file_path, device)))
     # Select the five smallest devices from the sorted list
-    device_list = devices_sorted[:5]
-    # device_list = devices_sorted[:2]
+    device_list = devices_sorted[device_low:device_high]
     print(device_list)
 
     # Train the FastText model and create it's embeddings
@@ -33,7 +32,11 @@ def main(vector_size = 768):
     start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
     start_time = time.time()
 
-    model_filename = create_fasttext_embeddings.train_fasttext_model(file_path, device_list, 1, vector_size)
+    new_dir = os.path.join(save_dir, 'FastText')
+    if not os.path.exists(new_dir):
+        os.mkdir(new_dir)
+
+    model_filename = create_fasttext_embeddings.train_fasttext_model(file_path, device_list, new_dir, 1, vector_size)
     fast_text_training_time = time.time() - start_time
     fast_text_training_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
 
@@ -107,8 +110,8 @@ def print_stats(stats_list, vector_list):
 
 if __name__ == "__main__":
     # vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
-    vector_list = [128, 256, 512, 768]
-    # vector_list = [128]
+    # vector_list = [128, 256, 512, 768]
+    vector_list = [128]
     stats_list = []
 
     time_descriptions = ["FastText Training",
@@ -119,10 +122,22 @@ if __name__ == "__main__":
                            "FastText",
                            "BERT"]
 
+    # Analyzes devices device_low - device_high
+    device_high = 5
+    device_low = 0
+
+    cwd = os.getcwd()
 
     for vector in vector_list:
         print(f"Creating embeddings at vector size: {vector}")
-        times, memories = main(vector)
+        
+        save_dir = str(device_low) + "-" +str(device_high)
+        save_dir = os.path.join(cwd, save_dir)
+
+        if not os.path.exists(save_dir):
+            os.mkdir(save_dir)
+
+        times, memories = main(device_low, device_high, save_dir, vector)
         stats_list.append((times, memories))
     print(stats_list)
     print_stats(stats_list, vector_list)
