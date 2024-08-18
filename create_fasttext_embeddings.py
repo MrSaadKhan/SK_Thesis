@@ -19,7 +19,7 @@ def train_fasttext_model(file_path, device_list, save_dir, word_embedding_option
     # Check if the model already exists
     if os.path.exists(save_dir):
         print(f'\033[92mModel already exists: {model_filename} ✔\033[0m')
-        return model_filename
+        return os.path.join(save_dir, "model.model")
     else:
         os.makedirs(save_dir)
     
@@ -44,15 +44,17 @@ def train_fasttext_model(file_path, device_list, save_dir, word_embedding_option
         model = FastText(sentences=[sentence[0] for sentence in dev1_seen], vector_size=embedding_size, window=5, min_count=1, workers=4)
     print('\033[92mFastText model created ✔\033[0m')
 
-    model.save(save_dir)
+    model.save(os.path.join(save_dir, "model.model"))
     print(f'\033[92mFastText model saved as {model_filename} ✔\033[0m')
 
-    return model_filename
+    return os.path.join(save_dir, "model.model")
 
-def create_device_embedding(model, file_path, device, vector_size=768):
+def create_device_embedding(model, file_path, device, model_dir, vector_size=768):
     
+    save_dir = os.path.join(model_dir, '..')
+
     # Check if the embeddings text file already exists
-    embeddings_folder = "fast_text_embeddings" + "_" + str(vector_size)
+    embeddings_folder = os.path.join(save_dir, "fast_text_embeddings")
     # Define filenames for seen and unseen embeddings
     seen_embeddings_filename = os.path.join(embeddings_folder, device + "_seen_fast_text_embeddings.txt")
     unseen_embeddings_filename = os.path.join(embeddings_folder, device + "_unseen_fast_text_embeddings.txt")
@@ -116,7 +118,7 @@ def create_embeddings(model_filename, file_path, device_list, vector_size = 768)
     # Load the trained FastText model
     model = FastText.load(model_filename)
     for device in device_list:
-        seen, unseen = create_device_embedding(model, file_path, device, vector_size)
+        seen, unseen = create_device_embedding(model, file_path, device, model_filename ,vector_size)
         seen_count += seen
         unseen_count += unseen
 

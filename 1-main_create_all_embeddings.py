@@ -131,11 +131,11 @@ if __name__ == "__main__":
     for vector in vector_list:
         print(f"Creating embeddings at vector size: {vector}")
         
-        save_dir = str(device_low) + "-" +str(device_high)
-        save_dir = os.path.join(cwd, save_dir)
+        save_dir = str(device_low) + "-" + str(device_high)
+        save_dir = os.path.join(cwd, save_dir, str(vector))
 
         if not os.path.exists(save_dir):
-            os.mkdir(save_dir)
+            os.makedirs(save_dir)
 
         times, memories = main(device_low, device_high, save_dir, vector)
         stats_list.append((times, memories))
