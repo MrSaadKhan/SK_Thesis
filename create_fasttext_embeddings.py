@@ -51,7 +51,7 @@ def train_fasttext_model(file_path, device_list, save_dir, word_embedding_option
 
 def create_device_embedding(model, file_path, device, model_dir, vector_size=768):
     
-    save_dir = os.path.join(model_dir, '..')
+    save_dir = os.path.dirname(model_dir)
 
     # Check if the embeddings text file already exists
     embeddings_folder = os.path.join(save_dir, "fast_text_embeddings")
