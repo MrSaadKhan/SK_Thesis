@@ -5,8 +5,9 @@ from transformers import BertTokenizer, BertModel, TFBertModel, AutoModel, AutoT
 import prepare_data
 from tqdm import tqdm
 
-def create_device_embedding(model, tokenizer, file_path, device, vector_size=768):
+def create_device_embedding(model, tokenizer, file_path, device, save_dir, vector_size=768):
     embeddings_folder = "bert_embeddings" + "_" + str(vector_size)
+    embeddings_folder = os.path.join(save_dir, embeddings_folder)
     seen_embeddings_filename = os.path.join(embeddings_folder, device + "_seen_bert_embeddings.txt")
     unseen_embeddings_filename = os.path.join(embeddings_folder, device + "_unseen_bert_embeddings.txt")
     
@@ -15,7 +16,8 @@ def create_device_embedding(model, tokenizer, file_path, device, vector_size=768
     
     if os.path.exists(seen_embeddings_filename) and os.path.exists(unseen_embeddings_filename):
         print(f'\033[92mEmbeddings already exist for {device} ✔\033[0m')
-        return 0, 0, None
+        print(f'Paths checked: {seen_embeddings_filename} and {unseen_embeddings_filename}')
+        return 0, 0
     
     # seen_embeddings = []
     # unseen_embeddings = []
@@ -33,33 +35,8 @@ def create_device_embedding(model, tokenizer, file_path, device, vector_size=768
     device_file_path = os.path.join(file_path, device)
     seen, unseen = prepare_data.prepare_data(device_file_path)
 
-    # for sentence in seen:
-    #     embedding = get_sentence_embedding(sentence[0], model, tokenizer, vector_size)
-    #     print(embedding)
-    #     seen_embeddings.append(embedding)
-
-    # for sentence in unseen:
-    #     embedding = get_sentence_embedding(sentence[0], model, tokenizer, vector_size)
-    #     unseen_embeddings.append(embedding)
-
-    # with open(seen_embeddings_filename, 'w') as f:
-    #     for embedding in seen_embeddings:
-    #         f.write(' '.join(map(str, embedding.tolist())) + '\n')
-
-    # with open(unseen_embeddings_filename, 'w') as f:
-    #     for embedding in unseen_embeddings:
-    #         f.write(' '.join(map(str, embedding.tolist())) + '\n')
-
-    # with open(seen_embeddings_filename, 'w') as f_seen:
-    #     for sentence in seen:
-    #         embedding = get_sentence_embedding(sentence[0], model, tokenizer, vector_size)
-    #         f_seen.write(' '.join(map(str, embedding.tolist())) + '\n')
-
-    # with open(unseen_embeddings_filename, 'w') as f_unseen:
-    #     for sentence in unseen:
-    #         embedding = get_sentence_embedding(sentence[0], model, tokenizer, vector_size)
-    #         f_unseen.write(' '.join(map(str, embedding.tolist())) + '\n')
     total_sentences = len(seen) + len(unseen)
+
     with open(seen_embeddings_filename, 'w') as f_seen, tqdm(total=total_sentences, desc=f'Processing {device}', unit='sentence') as pbar:
         for sentence in seen:
             embedding = get_sentence_embedding(sentence[0], model, tokenizer, vector_size)
@@ -75,7 +52,7 @@ def create_device_embedding(model, tokenizer, file_path, device, vector_size=768
     print(f'Number of unseen embeddings created: {len(unseen)}')
     return len(seen), len(unseen)
 
-def create_embeddings(file_path, device_list, vector_size = 768):
+def create_embeddings(file_path, device_list, save_dir, vector_size = 768):
     def load_bert_model(model_name):
         # Load tokenizer and model
         tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -111,7 +88,7 @@ def create_embeddings(file_path, device_list, vector_size = 768):
     unseen_count = 0
 
     for device in device_list:
-        seen, unseen = create_device_embedding(model, tokenizer, file_path, device, vector_size)
+        seen, unseen = create_device_embedding(model, tokenizer, file_path, device, save_dir, vector_size)
         seen_count += seen
         unseen_count += unseen
 

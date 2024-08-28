@@ -55,7 +55,11 @@ def main(device_low, device_high, save_dir, vector_size = 768):
     # Create BERT embeddings using pretrained model
     # devices_lengths = [seen, unseen]
 
-    seen, unseen, temp = create_bert_embeddings.create_embeddings(file_path, device_list, vector_size)
+    new_dir = os.path.join(save_dir, 'BERT')
+    if not os.path.exists(new_dir):
+        os.mkdir(new_dir)
+
+    seen, unseen, temp = create_bert_embeddings.create_embeddings(file_path, device_list, new_dir, vector_size)
     if temp is not None:
         bert_embeddings_creation_time = time.time() - start_time
         bert_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
@@ -110,8 +114,8 @@ def print_stats(stats_list, vector_list):
 
 if __name__ == "__main__":
     # vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
-    # vector_list = [128, 256, 512, 768]
-    vector_list = [128]
+    vector_list = [128, 256, 512, 768]
+    # vector_list = [128]
     stats_list = []
 
     time_descriptions = ["FastText Training",
