@@ -8,12 +8,27 @@ def save_individual_file(list_of_lists, name, path):
             line = ','.join(map(str, inner_list))
             file.write(line + '\n')
     
-
 def save_files(seen, unseen, name, path):
     save_individual_file(seen, name + '_seen', path)
     save_individual_file(unseen, name + '_unseen', path)
 
+def get_data(save_path, device):
+    seen = read_file_as_list_of_lists(os.path.join(save_path, device + "_seen.txt"))
+    unseen = read_file_as_list_of_lists(os.path.join(save_path, device + "_unseen.txt"))
+    return seen, unseen
 
+def read_file_as_list_of_lists(file_path):
+    list_of_lists = []
+    try:
+        with open(file_path, 'r') as file:
+            for line in file:
+                # Strip newline characters and split the line into a list of words
+                list_of_lists.append(line.strip().split())
+    except FileNotFoundError:
+        print(f"The file at {file_path} was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    return list_of_lists
 
 if __name__ == "__main__":
     file_path = r'/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix'
@@ -51,12 +66,18 @@ if __name__ == "__main__":
     device_list = devices_sorted[device_low:device_high]
     print(device_list)
 
+    lengths = []
     for device in device_list:
         print(os.path.join(file_path, device))
+
         seen, unseen = prepare_data.prepare_data(os.path.join(file_path, device))
+
+        length = ((len(seen), len(unseen)))
+        print(f"Device: {device} \nSeen Length: {length[0]}\nUnseen Length: {length[1]}")
         save_files(seen, unseen, device, save_path)
 
+        # lengths.append(length)
 
-#  Requirements:
-#  A proper file structure for all preprocessed data to exist.
-#  Call prepare_data.prepare_data(filepath) for every device to process
+    for device in device_list:
+        print(len(read_file_as_list_of_lists(os.path.join(save_path, device + "_seen.txt"))))
+
