@@ -30,7 +30,7 @@ def train_fasttext_model(file_path, device_list, save_dir, data_path, word_embed
     for device in device_list:
         # device_file_path = os.path.join(file_path, device)
         # seen, _ = prepare_data.prepare_data(device_file_path)
-        seen, _ = get_data.get_seen_data(data_path, device)
+        seen = get_data.get_seen_data(data_path, device)
         
         dev1_seen.extend(seen)
 

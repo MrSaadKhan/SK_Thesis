@@ -1,0 +1,37 @@
+nohup: ignoring input
+['nature_remo.json', 'xiaomi_mijia_led.json', 'irobot_roomba.json', 'planex_smacam_pantilt.json', 'jvc_kenwood_hdtv_ip_camera.json']
+/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix/nature_remo.json
+Cleaning data... for nature_remo.json
+322 flows!
+[92mData prepared successfully ✔[0m
+Device: nature_remo.json 
+Seen Length: 226
+Unseen Length: 96
+/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix/xiaomi_mijia_led.json
+Cleaning data... for xiaomi_mijia_led.json
+4653 flows!
+[92mData prepared successfully ✔[0m
+Device: xiaomi_mijia_led.json 
+Seen Length: 3258
+Unseen Length: 1395
+/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix/irobot_roomba.json
+Cleaning data... for irobot_roomba.json
+4906 flows!
+[92mData prepared successfully ✔[0m
+Device: irobot_roomba.json 
+Seen Length: 3435
+Unseen Length: 1471
+/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix/planex_smacam_pantilt.json
+Cleaning data... for planex_smacam_pantilt.json
+25407 flows!
+[92mData prepared successfully ✔[0m
+Device: planex_smacam_pantilt.json 
+Seen Length: 17785
+Unseen Length: 7622
+/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix/jvc_kenwood_hdtv_ip_camera.json
+Cleaning data... for jvc_kenwood_hdtv_ip_camera.json
+12131 flows!
+[92mData prepared successfully ✔[0m
+Device: jvc_kenwood_hdtv_ip_camera.json 
+Seen Length: 8492
+Unseen Length: 3639
