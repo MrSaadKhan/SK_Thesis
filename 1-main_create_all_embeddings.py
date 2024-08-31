@@ -7,7 +7,7 @@ from memory_profiler import profile, memory_usage
 import gc
 
 @profile
-def main(device_low, device_high, save_dir, vector_size = 768):
+def main(device_low, device_high, save_dir, data_path, vector_size = 768):
     # Directory path to read files from
     file_path = r'/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix'
 
@@ -36,7 +36,7 @@ def main(device_low, device_high, save_dir, vector_size = 768):
     if not os.path.exists(new_dir):
         os.mkdir(new_dir)
 
-    model_filename = create_fasttext_embeddings.train_fasttext_model(file_path, device_list, new_dir, 1, vector_size)
+    model_filename = create_fasttext_embeddings.train_fasttext_model(file_path, device_list, new_dir, data_path, 1, vector_size)
     fast_text_training_time = time.time() - start_time
     fast_text_training_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
 
@@ -44,7 +44,7 @@ def main(device_low, device_high, save_dir, vector_size = 768):
     start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
     start_time = time.time()
 
-    seen_ft, unseen_ft = create_fasttext_embeddings.create_embeddings(model_filename, file_path, device_list, vector_size)
+    seen_ft, unseen_ft = create_fasttext_embeddings.create_embeddings(model_filename, file_path, device_list, data_path, vector_size)
     fast_text_embeddings_creation_time = time.time() - start_time
     fast_text_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
 
@@ -59,7 +59,7 @@ def main(device_low, device_high, save_dir, vector_size = 768):
     if not os.path.exists(new_dir):
         os.mkdir(new_dir)
 
-    seen, unseen, temp = create_bert_embeddings.create_embeddings(file_path, device_list, new_dir, vector_size)
+    seen, unseen, temp = create_bert_embeddings.create_embeddings(file_path, device_list, new_dir, data_path, vector_size)
     if temp is not None:
         bert_embeddings_creation_time = time.time() - start_time
         bert_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
@@ -132,6 +132,20 @@ if __name__ == "__main__":
 
     cwd = os.getcwd()
 
+    group_option=0
+    time_group=0
+    num2word_option=0   # Unlikely to be implemented
+
+    if group_option == 0:
+        group_path = 'ungrouped'
+        data_path = os.path.join(cwd, 'preprocessed_data', group_path)
+
+    else:
+        group_path = 'grouped'
+        time_path = str(time_group)
+        data_path = os.path.join(cwd, 'preprocessed_data', group_path, time_path)
+
+
     for vector in vector_list:
         print(f"Creating embeddings at vector size: {vector}")
         
@@ -141,7 +155,7 @@ if __name__ == "__main__":
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
 
-        times, memories = main(device_low, device_high, save_dir, vector)
+        times, memories = main(device_low, device_high, save_dir, data_path, vector)
         stats_list.append((times, memories))
     print(stats_list)
     print_stats(stats_list, vector_list)

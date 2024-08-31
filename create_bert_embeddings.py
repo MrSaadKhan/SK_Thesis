@@ -2,10 +2,11 @@ import os
 import numpy as np
 import torch
 from transformers import BertTokenizer, BertModel, TFBertModel, AutoModel, AutoTokenizer
-import prepare_data
+# import prepare_data
+import get_data
 from tqdm import tqdm
 
-def create_device_embedding(model, tokenizer, file_path, device, save_dir, vector_size=768):
+def create_device_embedding(model, tokenizer, file_path, device, save_dir, data_dir, vector_size=768):
     embeddings_folder = "bert_embeddings" + "_" + str(vector_size)
     embeddings_folder = os.path.join(save_dir, embeddings_folder)
     seen_embeddings_filename = os.path.join(embeddings_folder, device + "_seen_bert_embeddings.txt")
@@ -32,8 +33,9 @@ def create_device_embedding(model, tokenizer, file_path, device, save_dir, vecto
         cls_embedding = outputs.last_hidden_state[0, 0, :].numpy()
         return cls_embedding
 
-    device_file_path = os.path.join(file_path, device)
-    seen, unseen = prepare_data.prepare_data(device_file_path)
+    # device_file_path = os.path.join(file_path, device)
+    # seen, unseen = prepare_data.prepare_data(device_file_path)
+    seen, unseen = get_data.get_data(data_dir, device)
 
     total_sentences = len(seen) + len(unseen)
 
@@ -52,7 +54,7 @@ def create_device_embedding(model, tokenizer, file_path, device, save_dir, vecto
     print(f'Number of unseen embeddings created: {len(unseen)}')
     return len(seen), len(unseen)
 
-def create_embeddings(file_path, device_list, save_dir, vector_size = 768):
+def create_embeddings(file_path, device_list, save_dir, data_dir, vector_size = 768):
     def load_bert_model(model_name):
         # Load tokenizer and model
         tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -88,7 +90,7 @@ def create_embeddings(file_path, device_list, save_dir, vector_size = 768):
     unseen_count = 0
 
     for device in device_list:
-        seen, unseen = create_device_embedding(model, tokenizer, file_path, device, save_dir, vector_size)
+        seen, unseen = create_device_embedding(model, tokenizer, file_path, device, save_dir, data_dir, vector_size)
         seen_count += seen
         unseen_count += unseen
 

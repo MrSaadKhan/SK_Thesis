@@ -21,14 +21,16 @@ def read_file_as_list_of_lists(file_path):
     list_of_lists = []
     try:
         with open(file_path, 'r') as file:
-            for line in file:
-                # Strip newline characters and split the line into a list of words
-                list_of_lists.append(line.strip().split())
+            # Read each line, strip newline characters, and keep it as a single string
+            list_of_lists = [[line.strip()] for line in file]
     except FileNotFoundError:
         print(f"The file at {file_path} was not found.")
+    except IOError as e:
+        print(f"An I/O error occurred: {e}")
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"An unexpected error occurred: {e}")
     return list_of_lists
+
 
 if __name__ == "__main__":
     file_path = r'/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix'
@@ -75,9 +77,3 @@ if __name__ == "__main__":
         length = ((len(seen), len(unseen)))
         print(f"Device: {device} \nSeen Length: {length[0]}\nUnseen Length: {length[1]}")
         save_files(seen, unseen, device, save_path)
-
-        # lengths.append(length)
-
-    for device in device_list:
-        print(len(read_file_as_list_of_lists(os.path.join(save_path, device + "_seen.txt"))))
-

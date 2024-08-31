@@ -1,10 +1,11 @@
 import os
 from gensim.models import FastText
 from gensim.utils import simple_preprocess
-import prepare_data
+# import prepare_data
 import numpy as np
+import get_data
 
-def train_fasttext_model(file_path, device_list, save_dir, word_embedding_option=1, embedding_size=768):
+def train_fasttext_model(file_path, device_list, save_dir, data_path, word_embedding_option=1, embedding_size=768):
 
     if word_embedding_option == 1:
         word_embed = "Ungrouped"
@@ -27,8 +28,9 @@ def train_fasttext_model(file_path, device_list, save_dir, word_embedding_option
     dev1_seen_word = []
 
     for device in device_list:
-        device_file_path = os.path.join(file_path, device)
-        seen, _ = prepare_data.prepare_data(device_file_path)
+        # device_file_path = os.path.join(file_path, device)
+        # seen, _ = prepare_data.prepare_data(device_file_path)
+        seen, _ = get_data.get_seen_data(data_path, device)
         
         dev1_seen.extend(seen)
 
@@ -49,7 +51,7 @@ def train_fasttext_model(file_path, device_list, save_dir, word_embedding_option
 
     return os.path.join(save_dir, "model.model")
 
-def create_device_embedding(model, file_path, device, model_dir, vector_size=768):
+def create_device_embedding(model, file_path, device, model_dir, data_path, vector_size=768):
     
     save_dir = os.path.dirname(model_dir)
 
@@ -84,8 +86,9 @@ def create_device_embedding(model, file_path, device, model_dir, vector_size=768
             return np.zeros(vector_size)
 
     # Prepare data for the device
-    device_file_path = os.path.join(file_path, device)
-    seen, unseen = prepare_data.prepare_data(device_file_path)
+    # device_file_path = os.path.join(file_path, device)
+    # seen, unseen = prepare_data.prepare_data(device_file_path)
+    seen, unseen = get_data.get_data(data_path, device)
 
     # Create embeddings for seen data
     for sentence in seen:
@@ -111,14 +114,14 @@ def create_device_embedding(model, file_path, device, model_dir, vector_size=768
     print(f'Number of unseen embeddings created: {len(unseen_embeddings)}')
     return len(seen_embeddings), len(unseen_embeddings)
 
-def create_embeddings(model_filename, file_path, device_list, vector_size = 768):
+def create_embeddings(model_filename, file_path, device_list, data_path, vector_size = 768):
     seen_count = 0
     unseen_count = 0
 
     # Load the trained FastText model
     model = FastText.load(model_filename)
     for device in device_list:
-        seen, unseen = create_device_embedding(model, file_path, device, model_filename ,vector_size)
+        seen, unseen = create_device_embedding(model, file_path, device, model_filename, data_path, vector_size)
         seen_count += seen
         unseen_count += unseen
 
