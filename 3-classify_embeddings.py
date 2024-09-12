@@ -191,11 +191,11 @@ def plot_accuracy_vs_vector_size(data):
     plt.savefig('plots/classifier_accuracy.pdf', format='pdf', dpi=300, transparent=True)
 
 
-def main(vector_list, device_range):
-    file_path = r'/home/iotresearch/saad/FastTextExp/thesis_b'
-    if not os.path.exists(file_path):
-        file_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T2\ELEC 4952 - Thesis B\python\thesis_b'
-
+def main(vector_list, device_range, vector_path, group_option):
+    # file_path = r'/home/iotresearch/saad/FastTextExp/thesis_b'
+    # if not os.path.exists(file_path):
+    #     file_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T2\ELEC 4952 - Thesis B\python\thesis_b'
+    file_path = vector_path
     stats_list = []
 
     time_descriptions = [
@@ -207,7 +207,13 @@ def main(vector_list, device_range):
         "BERT"
     ]
 
+    if group_option == 0:
+        group_option = "Ungrouped"
+    else:
+        group_option = "Grouped"
+
     embed_options = ["bert_embeddings", "fast_text_embeddings"]  # Embedding options
+    more_options = ["BERT", "FastText"]
 
     accuracy_list = []  # List to store accuracies
 
@@ -220,8 +226,10 @@ def main(vector_list, device_range):
         fast_text_embeddings_classification_mem_usage = 0
 
         for option in embed_options:
-            embed_name = f"{option}_{vector_size}"
-            folder_path = os.path.join(file_path, embed_name)
+            embed_name = f"{option}"
+            folder_path = os.path.join(file_path, vector_size, more_options[embed_options.index(option)], group_option, embed_name)
+
+            # folder_path = os.path.join(file_path, embed_name)
             memory = 0
 
             gc.collect()
@@ -243,6 +251,7 @@ def main(vector_list, device_range):
 
             else:
                 print(f"{embed_name} does not exist!")
+                print(f"Expected path: {folder_path}")
 
             print(f"Time taken: {time.time() - start_time:.2f} seconds")
 
@@ -254,9 +263,20 @@ def main(vector_list, device_range):
     plot_accuracy_vs_vector_size(accuracy_list)
     create_plots.plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_descriptions, training_length, testing_length)
 
+def list_folders_in_directory(directory_path):
+    # List all directories in the given path
+    folders = [folder for folder in os.listdir(directory_path) if os.path.isdir(os.path.join(directory_path, folder))]
+    return folders
 
 if __name__ == "__main__":
-    vector_list = [128, 256, 512, 768]
-    device_range = "0-5"
+    # vector_list = [128, 256, 512, 768]
 
-    main(vector_list, device_range)
+    group_option = 0
+
+    device_range = "0-1"
+    vector_path = os.path.join(os.getcwd(), device_range)
+    vector_list = list_folders_in_directory(vector_path)
+    print(vector_list)
+
+    main(vector_list, device_range, vector_path, group_option)
+    print("Complete :)")

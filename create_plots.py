@@ -115,7 +115,9 @@ def plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_de
     plt.grid(True)
     for i, desc in enumerate(memory_descriptions):
         memories = [stats[1][i] for stats in stats_list]
-        memories = [memories / (testing_length) for time in times]
+        # memories = [memories / (testing_length) for time in times]
+        memories = [memory / testing_length for memory in memories]
+
         if desc == "BERT":  # Change this line to crosses and dotted
             plt.plot(vector_list, memories, marker='x', linestyle='dashed', label='BERT')
         else:
