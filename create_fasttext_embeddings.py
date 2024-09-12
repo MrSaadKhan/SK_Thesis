@@ -7,7 +7,7 @@ import get_data
 
 def train_fasttext_model(file_path, device_list, save_dir, data_path, word_embedding_option=1, embedding_size=768):
 
-    if word_embedding_option == 1:
+    if word_embedding_option == 0:
         word_embed = "Ungrouped"
     else:
         word_embed = "Grouped"
@@ -15,7 +15,7 @@ def train_fasttext_model(file_path, device_list, save_dir, data_path, word_embed
     # Create the filename
     model_filename = "fasttext_model" + "_" + str(embedding_size)
 
-    save_dir = os.path.join(save_dir, word_embed, model_filename)
+    save_dir = os.path.join(save_dir, word_embed)
 
     # Check if the model already exists
     if os.path.exists(save_dir):

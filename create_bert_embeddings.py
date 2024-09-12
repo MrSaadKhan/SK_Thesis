@@ -7,8 +7,9 @@ import get_data
 from tqdm import tqdm
 
 def create_device_embedding(model, tokenizer, file_path, device, save_dir, data_dir, vector_size=768):
-    embeddings_folder = "bert_embeddings" + "_" + str(vector_size)
-    embeddings_folder = os.path.join(save_dir, embeddings_folder)
+    # embeddings_folder = "bert_embeddings" + "_" + str(vector_size)
+    # embeddings_folder = os.path.join(save_dir, embeddings_folder)
+    embeddings_folder = save_dir
     seen_embeddings_filename = os.path.join(embeddings_folder, device + "_seen_bert_embeddings.txt")
     unseen_embeddings_filename = os.path.join(embeddings_folder, device + "_unseen_bert_embeddings.txt")
     
@@ -54,7 +55,7 @@ def create_device_embedding(model, tokenizer, file_path, device, save_dir, data_
     print(f'Number of unseen embeddings created: {len(unseen)}')
     return len(seen), len(unseen)
 
-def create_embeddings(file_path, device_list, save_dir, data_dir, vector_size = 768):
+def create_embeddings(file_path, device_list, save_dir, data_dir, word_embedding_option, vector_size = 768):
     def load_bert_model(model_name):
         # Load tokenizer and model
         tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -62,6 +63,15 @@ def create_embeddings(file_path, device_list, save_dir, data_dir, vector_size = 
         
         return tokenizer, model
 
+
+    if word_embedding_option == 0:
+        word_embed = "Ungrouped"
+    else:
+        word_embed = "Grouped"
+    
+    model_dir = os.path.join(save_dir, word_embed)
+    save_dir = os.path.join(model_dir, "bert_embeddings")
+    os.makedirs(save_dir)
     # List of pretrained models of [128, 256, 512, 768]
     model_list = ["prajjwal1/bert-tiny", "prajjwal1/bert-mini", "prajjwal1/bert-medium", "bert-base-uncased"]
     model_lengths = [128, 256, 512, 768]
@@ -81,6 +91,8 @@ def create_embeddings(file_path, device_list, save_dir, data_dir, vector_size = 
     if model and tokenizer:
         print("Model and tokenizer loaded successfully.")
         flag = 0
+        torch.save(model.state_dict(), os.path.join(model_dir, "model.pth"))
+
     else:
         print("Failed to load model and tokenizer.")
         flag = None

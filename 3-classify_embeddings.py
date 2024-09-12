@@ -191,7 +191,7 @@ def plot_accuracy_vs_vector_size(data):
     plt.savefig('plots/classifier_accuracy.pdf', format='pdf', dpi=300, transparent=True)
 
 
-def main(vector_list):
+def main(vector_list, device_range):
     file_path = r'/home/iotresearch/saad/FastTextExp/thesis_b'
     if not os.path.exists(file_path):
         file_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T2\ELEC 4952 - Thesis B\python\thesis_b'
@@ -257,4 +257,6 @@ def main(vector_list):
 
 if __name__ == "__main__":
     vector_list = [128, 256, 512, 768]
-    main(vector_list)
+    device_range = "0-5"
+
+    main(vector_list, device_range)
