@@ -228,7 +228,7 @@ def main(vector_list, device_range, vector_path, group_option):
         for option in embed_options:
             embed_name = f"{option}"
             folder_path = os.path.join(file_path, vector_size, more_options[embed_options.index(option)], group_option, embed_name)
-
+            print(f"Folder to analyze: {folder_path}")
             # folder_path = os.path.join(file_path, embed_name)
             memory = 0
 
@@ -273,9 +273,9 @@ def list_folders_in_directory(directory_path):
 if __name__ == "__main__":
     # vector_list = [128, 256, 512, 768]
 
-    group_option = 0
+    group_option = 1
 
-    device_range = "0-10"
+    device_range = "0-5"
     vector_path = os.path.join(os.getcwd(), device_range)
     print(vector_path)
     vector_list = list_folders_in_directory(vector_path)

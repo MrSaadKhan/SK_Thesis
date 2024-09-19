@@ -19,10 +19,6 @@ def combine_lines(input_folder, output_folder, window_size, slide_length):
                     combined_line = ''.join(lines[i:i + window_size]).replace('\n', ' ')  # Combine lines
                     outfile.write(combined_line.strip() + '\n')
 
-                # Handle the remaining lines if any
-                for i in range(num_lines - window_size + 1, num_lines):
-                    combined_line = ''.join(lines[i:num_lines]).replace('\n', ' ')
-                    outfile.write(combined_line.strip() + '\n')
 
 if __name__ == "__main__":
     input_folder = os.path.join(os.getcwd(), "preprocessed_data", "ungrouped")
