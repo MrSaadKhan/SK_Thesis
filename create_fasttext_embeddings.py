@@ -5,9 +5,9 @@ from gensim.utils import simple_preprocess
 import numpy as np
 import get_data
 
-def train_fasttext_model(file_path, device_list, save_dir, data_path, word_embedding_option=1, embedding_size=768):
+def train_fasttext_model(file_path, device_list, save_dir, data_path, group_option, word_embedding_option=1, embedding_size=768):
 
-    if word_embedding_option == 0:
+    if group_option == 0:
         word_embed = "Ungrouped"
     else:
         word_embed = "Grouped"
@@ -18,7 +18,7 @@ def train_fasttext_model(file_path, device_list, save_dir, data_path, word_embed
     save_dir = os.path.join(save_dir, word_embed)
 
     # Check if the model already exists
-    if os.path.exists(save_dir):
+    if os.path.exists(os.path.join(save_dir, "model.model")):
         print(f'\033[92mModel already exists: {model_filename} ✔\033[0m')
         return os.path.join(save_dir, "model.model")
     else:

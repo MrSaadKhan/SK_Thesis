@@ -216,7 +216,7 @@ def main(vector_list, device_range, vector_path, group_option):
     more_options = ["BERT", "FastText"]
 
     accuracy_list = []  # List to store accuracies
-
+    print(vector_list)
     for vector_size in vector_list:
         print(f"Classifying embeddings at vector size: {vector_size}")
 
@@ -265,16 +265,19 @@ def main(vector_list, device_range, vector_path, group_option):
 
 def list_folders_in_directory(directory_path):
     # List all directories in the given path
-    folders = [folder for folder in os.listdir(directory_path) if os.path.isdir(os.path.join(directory_path, folder))]
-    return folders
+    folders = [folder for folder in os.listdir(directory_path) if os.path.isdir(os.path.join(directory_path, folder))]   
+    sorted_folders = sorted(folders, key=lambda x: int(x))
+    
+    return sorted_folders
 
 if __name__ == "__main__":
     # vector_list = [128, 256, 512, 768]
 
     group_option = 0
 
-    device_range = "0-1"
+    device_range = "0-10"
     vector_path = os.path.join(os.getcwd(), device_range)
+    print(vector_path)
     vector_list = list_folders_in_directory(vector_path)
     print(vector_list)
 
