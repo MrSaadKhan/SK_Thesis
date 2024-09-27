@@ -227,7 +227,7 @@ def main(vector_list, device_range, vector_path, group_option):
 
         for option in embed_options:
             embed_name = f"{option}"
-            folder_path = os.path.join(file_path, vector_size, more_options[embed_options.index(option)], group_option, embed_name)
+            folder_path = os.path.join(file_path, vector_size, more_options[embed_options.index(option)], group_option, embed_name, f"{window_size}_{slide_length}")
             print(f"Folder to analyze: {folder_path}")
             # folder_path = os.path.join(file_path, embed_name)
             memory = 0
@@ -263,22 +263,24 @@ def main(vector_list, device_range, vector_path, group_option):
     plot_accuracy_vs_vector_size(accuracy_list)
     create_plots.plot_graphs_classifier(stats_list, vector_list, time_descriptions, memory_descriptions, training_length, testing_length)
 
-def list_folders_in_directory(directory_path):
-    # List all directories in the given path
-    folders = [folder for folder in os.listdir(directory_path) if os.path.isdir(os.path.join(directory_path, folder))]   
-    sorted_folders = sorted(folders, key=lambda x: int(x))
+# def list_folders_in_directory(directory_path):
+#     # List all directories in the given path
+#     folders = [folder for folder in os.listdir(directory_path) if os.path.isdir(os.path.join(directory_path, folder))]   
+#     sorted_folders = sorted(folders, key=lambda x: int(x))
     
-    return sorted_folders
+#     return sorted_folders
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
+def main_ext(vector_list, device_low, device_high, group_option, time_group, num2word_option, window_group, window_size, slide_length):
     # vector_list = [128, 256, 512, 768]
 
-    group_option = 0
+    # group_option = 0   
 
-    device_range = "0-5"
+    # device_range = "0-5"
+    device_range = f"{device_low}-{device_high}"
     vector_path = os.path.join(os.getcwd(), device_range)
     print(vector_path)
-    vector_list = list_folders_in_directory(vector_path)
+    # vector_list = list_folders_in_directory(vector_path)
     print(vector_list)
 
     main(vector_list, device_range, vector_path, group_option)

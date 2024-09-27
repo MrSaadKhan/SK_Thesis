@@ -55,7 +55,7 @@ def create_device_embedding(model, tokenizer, file_path, device, save_dir, data_
     print(f'Number of unseen embeddings created: {len(unseen)}')
     return len(seen), len(unseen)
 
-def create_embeddings(file_path, device_list, save_dir, data_dir, group_option, word_embedding_option, vector_size = 768):
+def create_embeddings(file_path, device_list, save_dir, data_dir, group_option, word_embedding_option, window_size, slide_length, vector_size = 768):
     def load_bert_model(model_name):
         # Load tokenizer and model
         tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -69,7 +69,7 @@ def create_embeddings(file_path, device_list, save_dir, data_dir, group_option, 
     else:
         word_embed = "Grouped"
     
-    model_dir = os.path.join(save_dir, word_embed)
+    model_dir = os.path.join(save_dir, word_embed, f"{window_size}_{slide_length}")
     save_dir = os.path.join(model_dir, "bert_embeddings")
     os.makedirs(save_dir)
     # List of pretrained models of [128, 256, 512, 768]

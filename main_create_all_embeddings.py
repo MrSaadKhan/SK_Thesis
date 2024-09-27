@@ -62,7 +62,7 @@ def main(device_low, device_high, save_dir, data_path, group_option, word_embedd
     if not os.path.exists(new_dir):
         os.mkdir(new_dir)
 
-    seen, unseen, temp = create_bert_embeddings.create_embeddings(file_path, device_list, new_dir, data_path, group_option, word_embedding_option, vector_size)
+    seen, unseen, temp = create_bert_embeddings.create_embeddings(file_path, device_list, new_dir, data_path, group_option, word_embedding_option, window_size, slide_length, vector_size)
     if temp is not None:
         bert_embeddings_creation_time = time.time() - start_time
         bert_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
@@ -117,9 +117,10 @@ def print_stats(stats_list, vector_list):
 
         print("-----------------------")
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
+def main_ext(vector_list, device_low, device_high, group_option, time_group, num2word_option, window_group, window_size, slide_length):
     # vector_list = [768, 512, 256, 128, 64, 32, 15, 5]
-    vector_list = [128, 256, 512, 768]
+    # vector_list = [128, 256, 512, 768]
     # vector_list = [128, 256]
     stats_list = []
 
@@ -131,20 +132,20 @@ if __name__ == "__main__":
                            "FastText",
                            "BERT"]
 
-    # Analyzes devices device_low - device_high
-    device_high = 5
-    device_low = 0
+    # # Analyzes devices device_low - device_high
+    # device_high = 5
+    # device_low = 0
 
     cwd = os.getcwd()
 
-    group_option     = 0
+    # group_option     = 0
 
-    time_group       = 0
-    num2word_option  = 0   # Unlikely to be implemented
+    # time_group       = 0
+    # num2word_option  = 0   # Unlikely to be implemented
 
-    window_group     = 1
-    window_size      = 10
-    slide_length     = 1
+    # window_group     = 1
+    # window_size      = 10
+    # slide_length     = 1
 
 
     if group_option == 0:
