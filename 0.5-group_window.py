@@ -25,7 +25,7 @@ if __name__ == "__main__":
     output_folder = os.path.join(os.getcwd(), "preprocessed_data", "grouped")
     
     # Set window size and slide length
-    window_size = 5
+    window_size = 10
     slide_length = 1
     
     output_folder = os.path.join(output_folder, f"{window_size}_{slide_length}")

@@ -273,7 +273,7 @@ def list_folders_in_directory(directory_path):
 if __name__ == "__main__":
     # vector_list = [128, 256, 512, 768]
 
-    group_option = 1
+    group_option = 0
 
     device_range = "0-5"
     vector_path = os.path.join(os.getcwd(), device_range)

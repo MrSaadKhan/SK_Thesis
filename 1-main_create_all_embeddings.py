@@ -32,28 +32,31 @@ def main(device_low, device_high, save_dir, data_path, group_option, word_embedd
     start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
     start_time = time.time()
 
-    new_dir = os.path.join(save_dir, 'FastText')
-    if not os.path.exists(new_dir):
-        os.mkdir(new_dir)
+    # new_dir = os.path.join(save_dir, 'FastText')
+    # if not os.path.exists(new_dir):
+    #     os.mkdir(new_dir)
 
-    model_filename = create_fasttext_embeddings.train_fasttext_model(file_path, device_list, new_dir, data_path, group_option, word_embedding_option, vector_size)
-    fast_text_training_time = time.time() - start_time
-    fast_text_training_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
+    # model_filename = create_fasttext_embeddings.train_fasttext_model(file_path, device_list, new_dir, data_path, group_option, word_embedding_option, vector_size)
+    # fast_text_training_time = time.time() - start_time
+    # fast_text_training_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
 
-    gc.collect()
-    start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
-    start_time = time.time()
+    # gc.collect()
+    # start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
+    # start_time = time.time()
 
-    seen_ft, unseen_ft = create_fasttext_embeddings.create_embeddings(model_filename, file_path, device_list, data_path, vector_size)
-    fast_text_embeddings_creation_time = time.time() - start_time
-    fast_text_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
+    # seen_ft, unseen_ft = create_fasttext_embeddings.create_embeddings(model_filename, file_path, device_list, data_path, vector_size)
+    # fast_text_embeddings_creation_time = time.time() - start_time
+    # fast_text_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
 
-    gc.collect()
-    start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
-    start_time = time.time()
+    # gc.collect()
+    # start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
+    # start_time = time.time()
 
     # Create BERT embeddings using pretrained model
     # devices_lengths = [seen, unseen]
+    seen_ft = 0
+    unseen_ft = 0
+
 
     new_dir = os.path.join(save_dir, 'BERT')
     if not os.path.exists(new_dir):
@@ -75,8 +78,10 @@ def main(device_low, device_high, save_dir, data_path, group_option, word_embedd
 
     # Per flow!
     if total != 0:
-        times = (fast_text_training_time/unseen, fast_text_embeddings_creation_time/total, bert_embeddings_creation_time/total)
-        memories = (fast_text_training_mem_usage/unseen, fast_text_embeddings_creation_mem_usage/total, bert_embeddings_creation_mem_usage/total)
+        # times = (fast_text_training_time/unseen, fast_text_embeddings_creation_time/total, bert_embeddings_creation_time/total)
+        # memories = (fast_text_training_mem_usage/unseen, fast_text_embeddings_creation_mem_usage/total, bert_embeddings_creation_mem_usage/total)
+        times = (0, 0, bert_embeddings_creation_time/total)
+        memories = (0, 0, bert_embeddings_creation_mem_usage/total)
 
     else:
         times = (0, 0, 0)
@@ -132,13 +137,13 @@ if __name__ == "__main__":
 
     cwd = os.getcwd()
 
-    group_option     = 1
+    group_option     = 0
 
     time_group       = 0
     num2word_option  = 0   # Unlikely to be implemented
 
     window_group     = 1
-    window_size      = 5
+    window_size      = 10
     slide_length     = 1
 
 
