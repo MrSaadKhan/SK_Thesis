@@ -250,7 +250,6 @@ plots[old]/fast_text_embeddings_512_confusion_matrix_512.svg
 plots[old]/fast_text_embeddings_768_confusion_matrix_768.pdf
 plots[old]/fast_text_embeddings_768_confusion_matrix_768.png
 plots[old]/fast_text_embeddings_768_confusion_matrix_768.svg
-output0.txt
-output1.txt
-output3.txt
+output*.txt
 start.txt
+nohup.out

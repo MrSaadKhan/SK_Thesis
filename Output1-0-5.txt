@@ -1,0 +1,12 @@
+Processing for input directory: /home/iotresearch/saad/FastTextExp/thesis_b/preprocessed_data/ungrouped
+Creating embeddings at vector size: 128
+['nature_remo.json', 'xiaomi_mijia_led.json', 'irobot_roomba.json', 'planex_smacam_pantilt.json', 'jvc_kenwood_hdtv_ip_camera.json']
+Model and tokenizer loaded successfully.
+Number of seen embeddings created: 226
+Number of unseen embeddings created: 96
+Number of seen embeddings created: 3258
+Number of unseen embeddings created: 1395
+Number of seen embeddings created: 3435
+Number of unseen embeddings created: 1471
+Number of seen embeddings created: 17785
+Number of unseen embeddings created: 7622
