@@ -10,7 +10,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import classification_report, confusion_matrix
 import seaborn as sns
 
-num_devices = 5
+num_devices = 20
 
 # Set your folder path
 folder_path = '/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix/'
@@ -20,31 +20,31 @@ exclude_fields = ['sourceMacAddress', 'destinationMacAddress', 'sourceIPv4Addres
 
 # Mapping from the input file names to desired output
 input_output_map = {
-    "Amazon Echo Gen2": "Amazon Echo Gen2",
-    "Au Network Camera": "Network Camera",
-    "Au Wireless Adapter": "Wireless Adapter",
-    "Bitfinder Awair Breathe Easy": "Bitfinder Smart Air Monitor",
-    "Candy House Sesami Wi-fi Access Point": "Candy House Wi-Fi AP",
-    "Google Home Gen1": "Google Home Gen1",
-    "I-o Data Qwatch": "IO Data Camera",
-    "Irobot Roomba": "iRobot Roomba",
-    "Jvc Kenwood Cu-hb1": "JVC Smart Home Hub",
-    "Jvc Kenwood Hdtv Ip Camera": "JVC Camera",
-    "Line Clova Wave": "Line Smart Speaker",
-    "Link Japan Eremote": "Link eRemote",
-    "Mouse Computer Room Hub": "Mouse Computer Room Hub",
-    "Nature Remo": "Nature Smart Remote",
-    "Panasonic Doorphone": "Panasonic Doorphone",
-    "Philips Hue Bridge": "Philips Hue Light",
-    "Planex Camera One Shot!": "Planex Camera",
-    "Planex Smacam Outdoor": "Planex Outdoor Camera",
-    "Planex Smacam Pantilt": "Planex PanTilt Camera",
-    "Powerelectric Wi-fi Plug": "PowerElectric Wi-Fi Plug",
-    "Qrio Hub": "Qrio Hub",
-    "Sony Bravia": "Sony Bravia",
-    "Sony Network Camera": "Sony Network Camera",
-    "Sony Smart Speaker": "Sony Smart Speaker",
-    "Xiaomi Mijia Led": "Xiaomi Mijia LED"
+    "Amazon Echo Gen2"                      : "Amazon Echo Gen2",
+    "Au Network Camera"                     : "Network Camera",
+    "Au Wireless Adapter"                   : "Wireless Adapter",
+    "Bitfinder Awair Breathe Easy"          : "Bitfinder Smart Air Monitor",
+    "Candy House Sesami Wi-fi Access Point" : "Candy House Wi-Fi AP",
+    "Google Home Gen1"                      : "Google Home Gen1",
+    "I-o Data Qwatch"                       : "IO Data Camera",
+    "Irobot Roomba"                         : "iRobot Roomba",
+    "Jvc Kenwood Cu-hb1"                    : "JVC Smart Home Hub",
+    "Jvc Kenwood Hdtv Ip Camera"            : "JVC Camera",
+    "Line Clova Wave"                       : "Line Smart Speaker",
+    "Link Japan Eremote"                    : "Link eRemote",
+    "Mouse Computer Room Hub"               : "Mouse Computer Room Hub",
+    "Nature Remo"                           : "Nature Smart Remote",
+    "Panasonic Doorphone"                   : "Panasonic Doorphone",
+    "Philips Hue Bridge"                    : "Philips Hue Light",
+    "Planex Camera One Shot!"               : "Planex Camera",
+    "Planex Smacam Outdoor"                 : "Planex Outdoor Camera",
+    "Planex Smacam Pantilt"                 : "Planex PanTilt Camera",
+    "Powerelectric Wi-fi Plug"              : "PowerElectric Wi-Fi Plug",
+    "Qrio Hub"                              : "Qrio Hub",
+    "Sony Bravia"                           : "Sony Bravia",
+    "Sony Network Camera"                   : "Sony Network Camera",
+    "Sony Smart Speaker"                    : "Sony Smart Speaker",
+    "Xiaomi Mijia Led"                      : "Xiaomi Mijia LED"
 }
 
 # Function to convert IP address to integer
@@ -136,21 +136,6 @@ combined_df = pd.concat(all_filtered_data, ignore_index=True)
 
 # Drop non-numeric columns
 combined_numeric_df = combined_df.select_dtypes(include=[np.number])
-
-# print("DataFrame before dropping non-numeric columns:")
-# print(combined_df['sourceIPv4Address'])
-
-# # Print all the  column names
-# print("\nColumns:")
-# print(combined_df.columns.tolist())  # Print the list of remaining column names
-
-# # Print the DataFrame after dropping non-numeric columns
-# print("DataFrame after dropping non-numeric columns:")
-# print(combined_numeric_df)
-
-# # Print all the remaining column names
-# print("\nRemaining columns:")
-# print(combined_numeric_df.columns.tolist())  # Print the list of remaining column names
 
 # Check if there are any numeric fields left after filtering
 if combined_numeric_df.empty:
