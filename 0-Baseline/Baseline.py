@@ -16,6 +16,35 @@ folder_path = '/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix/'
 # Fields to exclude
 exclude_fields = ['sourceMacAddress', 'destinationMacAddress', 'sourceIPv4Address']
 
+# Mapping from the input file names to desired output
+input_output_map = {
+    "Amazon Echo Gen2"                      : "Amazon Echo Gen2",
+    "Au Network Camera"                     : "Network Camera",
+    "Au Wireless Adapter"                   : "Wireless Adapter",
+    "Bitfinder Awair Breathe Easy"          : "Bitfinder Smart Air Monitor",
+    "Candy House Sesami Wi-fi Access Point" : "Candy House Wi-Fi AP",
+    "Google Home Gen1"                      : "Google Home Gen1",
+    "I-o Data Qwatch"                       : "IO Data Camera",
+    "Irobot Roomba"                         : "iRobot Roomba",
+    "Jvc Kenwood Cu-hb1"                    : "JVC Smart Home Hub",
+    "Jvc Kenwood Hdtv Ip Camera"            : "JVC Camera",
+    "Line Clova Wave"                       : "Line Smart Speaker",
+    "Link Japan Eremote"                    : "Link eRemote",
+    "Mouse Computer Room Hub"               : "Mouse Computer Room Hub",
+    "Nature Remo"                           : "Nature Smart Remote",
+    "Panasonic Doorphone"                   : "Panasonic Doorphone",
+    "Philips Hue Bridge"                    : "Philips Hue Light",
+    "Planex Camera One Shot!"               : "Planex Camera",
+    "Planex Smacam Outdoor"                 : "Planex Outdoor Camera",
+    "Planex Smacam Pantilt"                 : "Planex PanTilt Camera",
+    "Powerelectric Wi-fi Plug"              : "PowerElectric Wi-Fi Plug",
+    "Qrio Hub"                              : "Qrio Hub",
+    "Sony Bravia"                           : "Sony Bravia",
+    "Sony Network Camera"                   : "Sony Network Camera",
+    "Sony Smart Speaker"                    : "Sony Smart Speaker",
+    "Xiaomi Mijia Led"                      : "Xiaomi Mijia LED"
+}
+
 # 1. List all JSON files and get the five smallest ones
 files = os.listdir(folder_path)
 files_with_size = [(file, os.path.getsize(os.path.join(folder_path, file))) for file in files if file.endswith('.json')]
@@ -42,8 +71,10 @@ for smallest_file in smallest_files:
             return False  # If it's not a valid IP, consider it not local
 
     # Extract device name from the filename (without extension)
-    device_name = os.path.splitext(smallest_file_name)[0]
-    device_labels.append(device_name)  # Collect device names for labeling
+    device_name = os.path.splitext(smallest_file_name)[0].replace('_', ' ').title()
+    # Use mapping to get the mapped label or default to original device name
+    mapped_device_name = input_output_map.get(device_name, device_name)
+    device_labels.append(mapped_device_name)  # Collect device names for labeling
 
     with open(smallest_file_path, 'r') as f:
         for line in f:
@@ -72,7 +103,7 @@ for smallest_file in smallest_files:
     filtered_df = pd.DataFrame(filtered_data)
     if not filtered_df.empty:
         # Add device labels based on the number of rows in the filtered DataFrame
-        device_name_series = pd.Series([device_name] * len(filtered_df))
+        device_name_series = pd.Series([mapped_device_name] * len(filtered_df))
         filtered_df['device_label'] = device_name_series  # Add the device label column
         all_filtered_data.append(filtered_df)  # Append filtered DataFrame to list
 
@@ -144,6 +175,7 @@ else:
         # Save the normalized confusion matrix plot as SVG and PDF with 300 DPI
         plt.savefig(os.path.join(output_dir, 'normalized_confusion_matrix.svg'), format='svg', bbox_inches='tight', transparent=True)
         plt.savefig(os.path.join(output_dir, 'normalized_confusion_matrix.pdf'), format='pdf', dpi=300, bbox_inches='tight', transparent=True)
+        plt.savefig(os.path.join(output_dir, 'normalized_confusion_matrix.png'), format='png', dpi=300, bbox_inches='tight', transparent=True)
         plt.close()
 
         print("Normalized confusion matrix saved successfully as SVG and PDF.")
