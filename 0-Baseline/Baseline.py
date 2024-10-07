@@ -18,32 +18,41 @@ exclude_fields = ['sourceMacAddress', 'destinationMacAddress', 'sourceIPv4Addres
 
 # Mapping from the input file names to desired output
 input_output_map = {
-    "Amazon Echo Gen2"                      : "Amazon Echo Gen2",
-    "Au Network Camera"                     : "Network Camera",
-    "Au Wireless Adapter"                   : "Wireless Adapter",
-    "Bitfinder Awair Breathe Easy"          : "Bitfinder Smart Air Monitor",
-    "Candy House Sesami Wi-fi Access Point" : "Candy House Wi-Fi AP",
-    "Google Home Gen1"                      : "Google Home Gen1",
-    "I-o Data Qwatch"                       : "IO Data Camera",
-    "Irobot Roomba"                         : "iRobot Roomba",
-    "Jvc Kenwood Cu-hb1"                    : "JVC Smart Home Hub",
-    "Jvc Kenwood Hdtv Ip Camera"            : "JVC Camera",
-    "Line Clova Wave"                       : "Line Smart Speaker",
-    "Link Japan Eremote"                    : "Link eRemote",
-    "Mouse Computer Room Hub"               : "Mouse Computer Room Hub",
-    "Nature Remo"                           : "Nature Smart Remote",
-    "Panasonic Doorphone"                   : "Panasonic Doorphone",
-    "Philips Hue Bridge"                    : "Philips Hue Light",
-    "Planex Camera One Shot!"               : "Planex Camera",
-    "Planex Smacam Outdoor"                 : "Planex Outdoor Camera",
-    "Planex Smacam Pantilt"                 : "Planex PanTilt Camera",
-    "Powerelectric Wi-fi Plug"              : "PowerElectric Wi-Fi Plug",
-    "Qrio Hub"                              : "Qrio Hub",
-    "Sony Bravia"                           : "Sony Bravia",
-    "Sony Network Camera"                   : "Sony Network Camera",
-    "Sony Smart Speaker"                    : "Sony Smart Speaker",
-    "Xiaomi Mijia Led"                      : "Xiaomi Mijia LED"
+    "Amazon Echo Gen2": "Amazon Echo Gen2",
+    "Au Network Camera": "Network Camera",
+    "Au Wireless Adapter": "Wireless Adapter",
+    "Bitfinder Awair Breathe Easy": "Bitfinder Smart Air Monitor",
+    "Candy House Sesami Wi-fi Access Point": "Candy House Wi-Fi AP",
+    "Google Home Gen1": "Google Home Gen1",
+    "I-o Data Qwatch": "IO Data Camera",
+    "Irobot Roomba": "iRobot Roomba",
+    "Jvc Kenwood Cu-hb1": "JVC Smart Home Hub",
+    "Jvc Kenwood Hdtv Ip Camera": "JVC Camera",
+    "Line Clova Wave": "Line Smart Speaker",
+    "Link Japan Eremote": "Link eRemote",
+    "Mouse Computer Room Hub": "Mouse Computer Room Hub",
+    "Nature Remo": "Nature Smart Remote",
+    "Panasonic Doorphone": "Panasonic Doorphone",
+    "Philips Hue Bridge": "Philips Hue Light",
+    "Planex Camera One Shot!": "Planex Camera",
+    "Planex Smacam Outdoor": "Planex Outdoor Camera",
+    "Planex Smacam Pantilt": "Planex PanTilt Camera",
+    "Powerelectric Wi-fi Plug": "PowerElectric Wi-Fi Plug",
+    "Qrio Hub": "Qrio Hub",
+    "Sony Bravia": "Sony Bravia",
+    "Sony Network Camera": "Sony Network Camera",
+    "Sony Smart Speaker": "Sony Smart Speaker",
+    "Xiaomi Mijia Led": "Xiaomi Mijia LED"
 }
+
+# Function to convert IP address to integer
+def ip_to_int(ip):
+    """Convert an IP address to its integer representation."""
+    try:
+        ip_obj = ipaddress.ip_address(ip)
+        return int(ip_obj)  # Return as an integer
+    except ValueError:
+        return None  # If not valid IP, return None
 
 # 1. List all JSON files and get the five smallest ones
 files = os.listdir(folder_path)
@@ -92,6 +101,11 @@ for smallest_file in smallest_files:
                     if not (is_local_ip(source_ip) and is_local_ip(destination_ip)):
                         # Remove the unwanted fields
                         filtered_flows = {key: value for key, value in flows_data.items() if key not in exclude_fields}
+
+                        # Convert IP addresses to integers
+                        if source_ip and destination_ip:
+                            filtered_flows['sourceIPv4Address'] = ip_to_int(source_ip)
+                            filtered_flows['destinationIPv4Address'] = ip_to_int(destination_ip)
                         
                         # Append filtered data to the list
                         filtered_data.append(filtered_flows)
@@ -112,6 +126,21 @@ combined_df = pd.concat(all_filtered_data, ignore_index=True)
 
 # Drop non-numeric columns
 combined_numeric_df = combined_df.select_dtypes(include=[np.number])
+
+print("DataFrame before dropping non-numeric columns:")
+print(combined_df)
+
+# Print all the  column names
+print("\nColumns:")
+print(combined_df.columns.tolist())  # Print the list of remaining column names
+
+# Print the DataFrame after dropping non-numeric columns
+print("DataFrame after dropping non-numeric columns:")
+print(combined_numeric_df)
+
+# Print all the remaining column names
+print("\nRemaining columns:")
+print(combined_numeric_df.columns.tolist())  # Print the list of remaining column names
 
 # Check if there are any numeric fields left after filtering
 if combined_numeric_df.empty:
@@ -178,4 +207,4 @@ else:
         plt.savefig(os.path.join(output_dir, 'normalized_confusion_matrix.png'), format='png', dpi=300, bbox_inches='tight', transparent=True)
         plt.close()
 
-        print("Normalized confusion matrix saved successfully as SVG and PDF.")
+        print("Normalized confusion matrix saved successfully as PNG, SVG and PDF.")
