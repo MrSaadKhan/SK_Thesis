@@ -10,6 +10,8 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import classification_report, confusion_matrix
 import seaborn as sns
 
+num_devices = 5
+
 # Set your folder path
 folder_path = '/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix/'
 
@@ -57,7 +59,7 @@ def ip_to_int(ip):
 # 1. List all JSON files and get the five smallest ones
 files = os.listdir(folder_path)
 files_with_size = [(file, os.path.getsize(os.path.join(folder_path, file))) for file in files if file.endswith('.json')]
-smallest_files = sorted(files_with_size, key=lambda x: x[1])[:5]  # Get the five smallest files
+smallest_files = sorted(files_with_size, key=lambda x: x[1])[:num_devices]  # Get the five smallest files
 
 # Initialize a list to hold filtered data and corresponding labels
 all_filtered_data = []
@@ -79,6 +81,14 @@ for smallest_file in smallest_files:
         except ValueError:
             return False  # If it's not a valid IP, consider it not local
 
+    def is_ipv6(ip):
+        """Check if the given IP address is IPv6."""
+        try:
+            ip_obj = ipaddress.ip_address(ip)
+            return ip_obj.version == 6
+        except ValueError:
+            return False  # Return False if it's not a valid IP address
+
     # Extract device name from the filename (without extension)
     device_name = os.path.splitext(smallest_file_name)[0].replace('_', ' ').title()
     # Use mapping to get the mapped label or default to original device name
@@ -98,7 +108,7 @@ for smallest_file in smallest_files:
                     destination_ip = flows_data.get('destinationIPv4Address')
 
                     # Check if both source and destination IPs are local
-                    if not (is_local_ip(source_ip) and is_local_ip(destination_ip)):
+                    if not ((is_local_ip(source_ip) and is_local_ip(destination_ip)) or (is_ipv6(source_ip) or is_ipv6(destination_ip))):
                         # Remove the unwanted fields
                         filtered_flows = {key: value for key, value in flows_data.items() if key not in exclude_fields}
 
@@ -127,20 +137,20 @@ combined_df = pd.concat(all_filtered_data, ignore_index=True)
 # Drop non-numeric columns
 combined_numeric_df = combined_df.select_dtypes(include=[np.number])
 
-print("DataFrame before dropping non-numeric columns:")
-print(combined_df)
+# print("DataFrame before dropping non-numeric columns:")
+# print(combined_df['sourceIPv4Address'])
 
-# Print all the  column names
-print("\nColumns:")
-print(combined_df.columns.tolist())  # Print the list of remaining column names
+# # Print all the  column names
+# print("\nColumns:")
+# print(combined_df.columns.tolist())  # Print the list of remaining column names
 
-# Print the DataFrame after dropping non-numeric columns
-print("DataFrame after dropping non-numeric columns:")
-print(combined_numeric_df)
+# # Print the DataFrame after dropping non-numeric columns
+# print("DataFrame after dropping non-numeric columns:")
+# print(combined_numeric_df)
 
-# Print all the remaining column names
-print("\nRemaining columns:")
-print(combined_numeric_df.columns.tolist())  # Print the list of remaining column names
+# # Print all the remaining column names
+# print("\nRemaining columns:")
+# print(combined_numeric_df.columns.tolist())  # Print the list of remaining column names
 
 # Check if there are any numeric fields left after filtering
 if combined_numeric_df.empty:
@@ -198,13 +208,16 @@ else:
         plt.gcf().patch.set_facecolor('none')
 
         # Create a folder for saving the confusion matrix
-        output_dir = os.path.join(os.getcwd(), 'confusion_matrices')
+        execute_path = os.path.dirname(os.path.abspath(__file__))
+
+        output_dir = os.path.join(execute_path, 'confusion_matrices', str(num_devices))
+
         os.makedirs(output_dir, exist_ok=True)
 
         # Save the normalized confusion matrix plot as SVG and PDF with 300 DPI
-        plt.savefig(os.path.join(output_dir, 'normalized_confusion_matrix.svg'), format='svg', bbox_inches='tight', transparent=True)
-        plt.savefig(os.path.join(output_dir, 'normalized_confusion_matrix.pdf'), format='pdf', dpi=300, bbox_inches='tight', transparent=True)
-        plt.savefig(os.path.join(output_dir, 'normalized_confusion_matrix.png'), format='png', dpi=300, bbox_inches='tight', transparent=True)
+        plt.savefig(os.path.join(output_dir, f'Baseline_confusion_matrix.svg'), format='svg', bbox_inches='tight', transparent=True)
+        plt.savefig(os.path.join(output_dir, f'Baseline_confusion_matrix.pdf'), format='pdf', dpi=300, bbox_inches='tight', transparent=True)
+        plt.savefig(os.path.join(output_dir, f'Baseline_confusion_matrix.png'), format='png', dpi=300, bbox_inches='tight', transparent=True)
         plt.close()
 
         print("Normalized confusion matrix saved successfully as PNG, SVG and PDF.")
