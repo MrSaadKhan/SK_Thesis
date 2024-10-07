@@ -38,3 +38,7 @@ def clean_data(target_file):
     print(str(num_elements) +' '+'flows!')
     # print(output1)
     return output1, num_elements
+
+# if __name__ == "__main__":
+#     print(clean_data("/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix/planex_smacam_pantilt.json"))
+    
