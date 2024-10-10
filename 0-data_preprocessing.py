@@ -68,7 +68,7 @@ if __name__ == "__main__":
     # List of files to exclude
     exclusion_list = ['sony_network_camera.json', 'mouse_computer_room_hub.json', 'planex_camera_one_shot!.json']
 
-    device_high = 1
+    device_high = 10
     device_low = 0
 
     all_devices = os.listdir(file_path)
@@ -87,3 +87,5 @@ if __name__ == "__main__":
         length = ((len(seen), len(unseen)))
         print(f"Device: {device} \nSeen Length: {length[0]}\nUnseen Length: {length[1]}")
         save_files(seen, unseen, device, save_path)
+
+    print("Complete :)")
