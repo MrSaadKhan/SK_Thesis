@@ -1,13 +1,22 @@
 import os
 import prepare_data
 
-def save_individual_file(list_of_lists, name, path):
+# def save_individual_file(list_of_lists, name, path):
+#     path = os.path.join(path, f'{name}.txt')
+#     with open(path, 'w') as file:
+#         for inner_list in list_of_lists:
+#             line = ','.join(map(str, inner_list))
+#             file.write(line + '\n')
+
+def save_individual_file(list_of_dicts, name, path):
     path = os.path.join(path, f'{name}.txt')
     with open(path, 'w') as file:
-        for inner_list in list_of_lists:
-            line = ','.join(map(str, inner_list))
-            file.write(line + '\n')
-    
+        # Write each dictionary on a new line
+        for data_dict in list_of_dicts:
+            # Convert the dictionary to a string representation
+            file.write(f"{data_dict}\n")
+
+   
 def save_files(seen, unseen, name, path):
     save_individual_file(seen, name + '_seen', path)
     save_individual_file(unseen, name + '_unseen', path)
@@ -59,7 +68,7 @@ if __name__ == "__main__":
     # List of files to exclude
     exclusion_list = ['sony_network_camera.json', 'mouse_computer_room_hub.json', 'planex_camera_one_shot!.json']
 
-    device_high = 10
+    device_high = 1
     device_low = 0
 
     all_devices = os.listdir(file_path)
@@ -73,6 +82,7 @@ if __name__ == "__main__":
         print(os.path.join(file_path, device))
 
         seen, unseen = prepare_data.prepare_data(os.path.join(file_path, device))
+        # print(seen)
 
         length = ((len(seen), len(unseen)))
         print(f"Device: {device} \nSeen Length: {length[0]}\nUnseen Length: {length[1]}")

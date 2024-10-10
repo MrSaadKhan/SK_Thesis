@@ -227,7 +227,7 @@ def main(vector_list, device_range, vector_path, group_option, window_size, slid
 
         for option in embed_options:
             embed_name = f"{option}"
-            folder_path = os.path.join(file_path, vector_size, more_options[embed_options.index(option)], group_option, embed_name, f"{window_size}_{slide_length}")
+            folder_path = os.path.join(file_path, str(vector_size), more_options[embed_options.index(option)], group_option, f"{window_size}_{slide_length}", embed_name)
             print(f"Folder to analyze: {folder_path}")
             # folder_path = os.path.join(file_path, embed_name)
             memory = 0

@@ -31,10 +31,13 @@ def clean_data(target_file):
 
     # Change the input correctly
 
-    output1 = [ '[' + str(item).replace(',', ' ').replace('}', '').replace('{', '').replace("]", '').replace("[", '').replace("'", '') + ']' for item in output1]
-    output1 = [[s.strip('[]')] for s in output1]
+    # output1 = [ '[' + str(item).replace(',', ' ').replace('}', '').replace('{', '').replace("]", '').replace("[", '').replace("'", '') + ']' for item in output1]
+    # output1 = [[s.strip('[]')] for s in output1]
     #num_elements = sum(1 for sublist in output1 if sublist[0] is not None)
-    num_elements = len(list(filter(lambda x: x[0] is not None, output1)))
+    # num_elements = len(list(filter(lambda x: x[0] is not None, output1)))
+    
+    num_elements = len(output)
+    
     print(str(num_elements) +' '+'flows!')
     # print(output1)
     return output1, num_elements

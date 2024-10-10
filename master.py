@@ -14,7 +14,7 @@ def reset_output():
 
 vector_list = [128, 256, 512, 768]
 device_low = 0
-device_high = [5]
+device_high = [5, 10]
 
 group_option = 0
 time_group = 0
@@ -27,9 +27,9 @@ slide_length = 1
 for device_high_option in device_high:
     
     # Redirect output to file for main_create_all_embeddings
-    # redirect_output_to_file(f"Output1-{device_low}-{device_high_option}.txt")
-    # main_create_all_embeddings.main_ext(vector_list, device_low, device_high_option, group_option, time_group, num2word_option, window_group, window_size, slide_length)
-    # reset_output()  # Reset output back to the console
+    redirect_output_to_file(f"Output1-{device_low}-{device_high_option}.txt")
+    main_create_all_embeddings.main_ext(vector_list, device_low, device_high_option, group_option, time_group, num2word_option, window_group, window_size, slide_length)
+    reset_output()  # Reset output back to the console
 
     # Redirect output to file for classify_embeddings
     redirect_output_to_file(f"output3-{device_low}{device_high_option}.txt")

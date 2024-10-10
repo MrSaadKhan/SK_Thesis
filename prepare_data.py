@@ -3,6 +3,77 @@ import math
 import clean_data, group_data, number_to_words
 
 def prepare_data(file_path, group_option=0, time_group=0, num2word_option=0):
+    
+    data_map = {
+        "flowStartMilliseconds"                     : "flow Start Milliseconds",
+        "flowEndMilliseconds"                       : "flow End Milliseconds",
+        "flowDurationMilliseconds"                  : "flow Duration Milliseconds",
+        "reverseFlowDeltaMilliseconds"              : "reverse Flow Delta Milliseconds",
+        "protocolIdentifier"                        : "protocol Identifier",
+        "sourceIPv4Address"                         : "source IPv4 Address",
+        "sourceTransportPort"                       : "source Transport Port",
+        "packetTotalCount"                          : "packet Total Count",
+        "octetTotalCount"                           : "octet Total Count",
+        "flowAttributes"                            : "flow Attributes",
+        "sourceMacAddress"                          : "source Mac Address",
+        "destinationIPv4Address"                    : "destination IPv4 Address",
+        "destinationTransportPort"                  : "destination Transport Port",
+        "reversePacketTotalCount"                   : "reverse Packet Total Count",
+        "reverseOctetTotalCount"                    : "reverse Octet Total Count",
+        "reverseFlowAttributes"                     : "reverse Flow Attributes",
+        "destinationMacAddress"                     : "destination Mac Address",
+        "initialTCPFlags"                           : "initial TCP Flags",
+        "unionTCPFlags"                             : "union TCP Flags",
+        "reverseInitialTCPFlags"                    : "reverse Initial TCP Flags",
+        "reverseUnionTCPFlags"                      : "reverse Union TCP Flags",
+        "tcpSequenceNumber"                         : "tcp Sequence Number",
+        "reverseTcpSequenceNumber"                  : "reverse Tcp Sequence Number",
+        "ingressInterface"                          : "ingress Interface",
+        "egressInterface"                           : "egress Interface",
+        "vlanId"                                    : "vlan Id",
+        "silkAppLabel"                              : "silkApp Label",
+        "ipClassOfService"                          : "ip Class Of Service",
+        "flowEndReason"                             : "flow End Reason",
+        "collectorName"                             : "collector Name",
+        "observationDomainId"                       : "observation Domain Id",
+        "tcpUrgTotalCount"                          : "tcp Urgent Total Count",
+        "smallPacketCount"                          : "small Packet Count",
+        "nonEmptyPacketCount"                       : "non Empty Packet Count",
+        "dataByteCount"                             : "data Byte Count",
+        "averageInterarrivalTime"                   : "average Interarrival Time",
+        "firstNonEmptyPacketSize"                   : "first Non Empty Packet Size",
+        "largePacketCount"                          : "large Packet Count",
+        "maxPacketSize"                             : "maximum Packet Size",
+        "firstEightNonEmptyPacketDirections"        : "first Eight Non Empty Packet Directions",
+        "standardDeviationPayloadLength"            : "standard Deviation Payload Length",
+        "standardDeviationInterarrivalTime"         : "standard Deviation Interarrival Time",
+        "bytesPerPacket"                            : "bytes Per Packet",
+        "reverseTcpUrgTotalCount"                   : "reverse Tcp Urgent Total Count",
+        "reverseSmallPacketCount"                   : "reverse Small Packet Count",
+        "reverseNonEmptyPacketCount"                : "reverse Non Empty Packet Count",
+        "reverseDataByteCount"                      : "reverse Data Byte Count",
+        "reverseAverageInterarrivalTime"            : "reverse Average Interarrival Time",
+        "reverseFirstNonEmptyPacketSize"            : "reverse First Non Empty Packet Size",
+        "reverseLargePacketCount"                   : "reverse Large Packet Count",
+        "reverseMaxPacketSize"                      : "reverse Maximum Packet Size",
+        "reverseStandardDeviationPayloadLength"     : "reverse Standard Deviation Payload Length",
+        "reverseStandardDeviationInterarrivalTime"  : "reverse Standard Deviation Interarrival Time",
+        "reverseBytesPerPacket"                     : "reverse Bytes Per Packet"
+    }
+
+    
+    def replace_words_in_dict_list(data_list, word_map):
+        updated_list = []
+        for data_dict in data_list:
+            new_dict = {}
+            for key, value in data_dict.items():
+                # Replace the key with the mapped value if found, else keep the original key
+                new_key = word_map.get(key, key)
+                new_dict[new_key] = value
+            updated_list.append(new_dict)
+        return updated_list
+
+
     num_elements = []
     data = []
 
@@ -23,6 +94,7 @@ def prepare_data(file_path, group_option=0, time_group=0, num2word_option=0):
     flattened_data = flatten(data)
     dev1, _ = split_list(flattened_data, num_elements[0])  # Split the list (second part is unused)
 
+    dev1 = replace_words_in_dict_list(dev1, data_map)
     del data, flattened_data
 
     def random_split(lst, n):
@@ -51,3 +123,7 @@ def prepare_data(file_path, group_option=0, time_group=0, num2word_option=0):
 
     print('\033[92mData prepared successfully ✔\033[0m')
     return dev1_seen, dev1_unseen
+
+
+# if __name__ == "__main__":
+#     print(prepare_data("/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix/planex_smacam_pantilt.json"))
