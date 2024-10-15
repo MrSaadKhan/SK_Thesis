@@ -30,8 +30,13 @@ def clean_data(target_file):
     output1 = output.values.flatten().tolist()
 
     # Change the input correctly
+    # print(output1)
 
     # output1 = [ '[' + str(item).replace(',', ' ').replace('}', '').replace('{', '').replace("]", '').replace("[", '').replace("'", '') + ']' for item in output1]
+    output1 = [{key: str(value).replace(',', '').replace('}', '').replace('{', '').replace("]", '').replace("[", '').replace("'", '') 
+                for key, value in item.items()} 
+                for item in output1]
+    # print(output1)
     # output1 = [[s.strip('[]')] for s in output1]
     #num_elements = sum(1 for sublist in output1 if sublist[0] is not None)
     # num_elements = len(list(filter(lambda x: x[0] is not None, output1)))

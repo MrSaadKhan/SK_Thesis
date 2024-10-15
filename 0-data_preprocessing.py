@@ -11,10 +11,12 @@ import prepare_data
 def save_individual_file(list_of_dicts, name, path):
     path = os.path.join(path, f'{name}.txt')
     with open(path, 'w') as file:
-        # Write each dictionary on a new line
+        # Write each dictionary on a new line, without formatting
         for data_dict in list_of_dicts:
-            # Convert the dictionary to a string representation
-            file.write(f"{data_dict}\n")
+            # Convert the dictionary to a custom formatted string (no {}, "", etc.)
+            formatted_line = ' '.join(f"{key}: {value}" for key, value in data_dict.items())
+            file.write(f"{formatted_line}\n")
+
 
    
 def save_files(seen, unseen, name, path):

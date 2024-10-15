@@ -16,31 +16,31 @@ Filename: /home/iotresearch/saad/FastTextExp/thesis_b/main_create_all_embeddings
 
 Line #    Mem usage    Increment  Occurrences   Line Contents
 =============================================================
-     9    823.1 MiB    823.1 MiB           1   @profile
+     9    821.7 MiB    821.7 MiB           1   @profile
     10                                         def main(device_low, device_high, save_dir, data_path, group_option, word_embedding_option, window_size, slide_length, vector_size = 768):
     11                                             # Directory path to read files from
-    12    823.1 MiB      0.0 MiB           1       file_path = r'/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix'
+    12    821.7 MiB      0.0 MiB           1       file_path = r'/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix'
     13                                         
-    14    823.1 MiB      0.0 MiB           1       if not os.path.exists(file_path):
+    14    821.7 MiB      0.0 MiB           1       if not os.path.exists(file_path):
     15                                                 file_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T1\Thesis A\Data'
     16                                         
     17                                             # List of files to exclude
-    18    823.1 MiB      0.0 MiB           1       exclusion_list = ['sony_network_camera.json', 'mouse_computer_room_hub.json', 'planex_camera_one_shot!.json']
+    18    821.7 MiB      0.0 MiB           1       exclusion_list = ['sony_network_camera.json', 'mouse_computer_room_hub.json', 'planex_camera_one_shot!.json']
     19                                         
     20                                             # Get a list of all devices in the directory
-    21    823.1 MiB      0.0 MiB           1       all_devices = os.listdir(file_path)
+    21    821.7 MiB      0.0 MiB           1       all_devices = os.listdir(file_path)
     22                                             # Filter out devices that are in the exclusion list
-    23    823.1 MiB      0.0 MiB          28       filtered_devices = [device for device in all_devices if device not in exclusion_list]
+    23    821.7 MiB      0.0 MiB          28       filtered_devices = [device for device in all_devices if device not in exclusion_list]
     24                                             # Sort devices by file size
-    25    823.1 MiB      0.0 MiB          45       devices_sorted = sorted(filtered_devices, key=lambda device: os.path.getsize(os.path.join(file_path, device)))
+    25    821.7 MiB      0.0 MiB          45       devices_sorted = sorted(filtered_devices, key=lambda device: os.path.getsize(os.path.join(file_path, device)))
     26                                             # Select the five smallest devices from the sorted list
-    27    823.1 MiB      0.0 MiB           1       device_list = devices_sorted[device_low:device_high]
-    28    823.1 MiB      0.0 MiB           1       print(device_list)
+    27    821.7 MiB      0.0 MiB           1       device_list = devices_sorted[device_low:device_high]
+    28    821.7 MiB      0.0 MiB           1       print(device_list)
     29                                         
     30                                             # Train the FastText model and create it's embeddings
-    31    823.1 MiB      0.0 MiB           1       gc.collect()
-    32    823.3 MiB      0.2 MiB           1       start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
-    33    823.3 MiB      0.0 MiB           1       start_time = time.time()
+    31    821.7 MiB      0.0 MiB           1       gc.collect()
+    32    821.9 MiB      0.3 MiB           1       start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
+    33    821.9 MiB      0.0 MiB           1       start_time = time.time()
     34                                         
     35                                             # new_dir = os.path.join(save_dir, 'FastText')
     36                                             # if not os.path.exists(new_dir):
@@ -64,40 +64,40 @@ Line #    Mem usage    Increment  Occurrences   Line Contents
     54                                         
     55                                             # Create BERT embeddings using pretrained model
     56                                             # devices_lengths = [seen, unseen]
-    57    823.3 MiB      0.0 MiB           1       seen_ft = 0
-    58    823.3 MiB      0.0 MiB           1       unseen_ft = 0
+    57    821.9 MiB      0.0 MiB           1       seen_ft = 0
+    58    821.9 MiB      0.0 MiB           1       unseen_ft = 0
     59                                         
     60                                         
-    61    823.3 MiB      0.0 MiB           1       new_dir = os.path.join(save_dir, 'BERT')
-    62    823.3 MiB      0.0 MiB           1       if not os.path.exists(new_dir):
-    63    823.3 MiB      0.0 MiB           1           os.mkdir(new_dir)
+    61    821.9 MiB      0.0 MiB           1       new_dir = os.path.join(save_dir, 'BERT')
+    62    821.9 MiB      0.0 MiB           1       if not os.path.exists(new_dir):
+    63    821.9 MiB      0.0 MiB           1           os.mkdir(new_dir)
     64                                         
-    65   1045.1 MiB    221.8 MiB           1       seen, unseen, temp = create_bert_embeddings.create_embeddings(file_path, device_list, new_dir, data_path, group_option, word_embedding_option, window_size, slide_length, vector_size)
-    66   1045.1 MiB      0.0 MiB           1       if temp is not None:
-    67   1045.1 MiB      0.0 MiB           1           bert_embeddings_creation_time = time.time() - start_time
-    68   1045.1 MiB      0.0 MiB           1           bert_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
+    65   1036.8 MiB    214.8 MiB           1       seen, unseen, temp = create_bert_embeddings.create_embeddings(file_path, device_list, new_dir, data_path, group_option, word_embedding_option, window_size, slide_length, vector_size)
+    66   1036.8 MiB      0.0 MiB           1       if temp is not None:
+    67   1036.8 MiB      0.0 MiB           1           bert_embeddings_creation_time = time.time() - start_time
+    68   1036.8 MiB      0.0 MiB           1           bert_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
     69                                             else:
     70                                                 bert_embeddings_creation_time = 0
     71                                                 bert_embeddings_creation_mem_usage = 0
     72                                         
-    73   1045.1 MiB      0.0 MiB           1       total = seen + unseen
-    74   1045.1 MiB      0.0 MiB           1       if total == 0:
+    73   1036.8 MiB      0.0 MiB           1       total = seen + unseen
+    74   1036.8 MiB      0.0 MiB           1       if total == 0:
     75                                                 total = seen_ft + unseen_ft
     76                                                 unseen = unseen_ft
     77                                                 seen = seen_ft
     78                                         
     79                                             # Per flow!
-    80   1045.1 MiB      0.0 MiB           1       if total != 0:
+    80   1036.8 MiB      0.0 MiB           1       if total != 0:
     81                                                 # times = (fast_text_training_time/unseen, fast_text_embeddings_creation_time/total, bert_embeddings_creation_time/total)
     82                                                 # memories = (fast_text_training_mem_usage/unseen, fast_text_embeddings_creation_mem_usage/total, bert_embeddings_creation_mem_usage/total)
-    83   1045.1 MiB      0.0 MiB           1           times = (0, 0, bert_embeddings_creation_time/total)
-    84   1045.1 MiB      0.0 MiB           1           memories = (0, 0, bert_embeddings_creation_mem_usage/total)
+    83   1036.8 MiB      0.0 MiB           1           times = (0, 0, bert_embeddings_creation_time/total)
+    84   1036.8 MiB      0.0 MiB           1           memories = (0, 0, bert_embeddings_creation_mem_usage/total)
     85                                         
     86                                             else:
     87                                                 times = (0, 0, 0)
     88                                                 memories = times
     89                                         
-    90   1045.1 MiB      0.0 MiB           1       return times, memories
+    90   1036.8 MiB      0.0 MiB           1       return times, memories
 
 
 Creating embeddings at vector size: 256
@@ -117,31 +117,31 @@ Filename: /home/iotresearch/saad/FastTextExp/thesis_b/main_create_all_embeddings
 
 Line #    Mem usage    Increment  Occurrences   Line Contents
 =============================================================
-     9   1045.1 MiB   1045.1 MiB           1   @profile
+     9   1036.8 MiB   1036.8 MiB           1   @profile
     10                                         def main(device_low, device_high, save_dir, data_path, group_option, word_embedding_option, window_size, slide_length, vector_size = 768):
     11                                             # Directory path to read files from
-    12   1045.1 MiB      0.0 MiB           1       file_path = r'/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix'
+    12   1036.8 MiB      0.0 MiB           1       file_path = r'/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix'
     13                                         
-    14   1045.1 MiB      0.0 MiB           1       if not os.path.exists(file_path):
+    14   1036.8 MiB      0.0 MiB           1       if not os.path.exists(file_path):
     15                                                 file_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T1\Thesis A\Data'
     16                                         
     17                                             # List of files to exclude
-    18   1045.1 MiB      0.0 MiB           1       exclusion_list = ['sony_network_camera.json', 'mouse_computer_room_hub.json', 'planex_camera_one_shot!.json']
+    18   1036.8 MiB      0.0 MiB           1       exclusion_list = ['sony_network_camera.json', 'mouse_computer_room_hub.json', 'planex_camera_one_shot!.json']
     19                                         
     20                                             # Get a list of all devices in the directory
-    21   1045.1 MiB      0.0 MiB           1       all_devices = os.listdir(file_path)
+    21   1036.8 MiB      0.0 MiB           1       all_devices = os.listdir(file_path)
     22                                             # Filter out devices that are in the exclusion list
-    23   1045.1 MiB      0.0 MiB          28       filtered_devices = [device for device in all_devices if device not in exclusion_list]
+    23   1036.8 MiB      0.0 MiB          28       filtered_devices = [device for device in all_devices if device not in exclusion_list]
     24                                             # Sort devices by file size
-    25   1045.1 MiB      0.0 MiB          45       devices_sorted = sorted(filtered_devices, key=lambda device: os.path.getsize(os.path.join(file_path, device)))
+    25   1036.8 MiB      0.0 MiB          45       devices_sorted = sorted(filtered_devices, key=lambda device: os.path.getsize(os.path.join(file_path, device)))
     26                                             # Select the five smallest devices from the sorted list
-    27   1045.1 MiB      0.0 MiB           1       device_list = devices_sorted[device_low:device_high]
-    28   1045.1 MiB      0.0 MiB           1       print(device_list)
+    27   1036.8 MiB      0.0 MiB           1       device_list = devices_sorted[device_low:device_high]
+    28   1036.8 MiB      0.0 MiB           1       print(device_list)
     29                                         
     30                                             # Train the FastText model and create it's embeddings
-    31   1045.1 MiB      0.0 MiB           1       gc.collect()
-    32   1045.1 MiB      0.0 MiB           1       start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
-    33   1045.1 MiB      0.0 MiB           1       start_time = time.time()
+    31   1036.8 MiB      0.0 MiB           1       gc.collect()
+    32   1036.8 MiB      0.0 MiB           1       start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
+    33   1036.8 MiB      0.0 MiB           1       start_time = time.time()
     34                                         
     35                                             # new_dir = os.path.join(save_dir, 'FastText')
     36                                             # if not os.path.exists(new_dir):
@@ -165,40 +165,40 @@ Line #    Mem usage    Increment  Occurrences   Line Contents
     54                                         
     55                                             # Create BERT embeddings using pretrained model
     56                                             # devices_lengths = [seen, unseen]
-    57   1045.1 MiB      0.0 MiB           1       seen_ft = 0
-    58   1045.1 MiB      0.0 MiB           1       unseen_ft = 0
+    57   1036.8 MiB      0.0 MiB           1       seen_ft = 0
+    58   1036.8 MiB      0.0 MiB           1       unseen_ft = 0
     59                                         
     60                                         
-    61   1045.1 MiB      0.0 MiB           1       new_dir = os.path.join(save_dir, 'BERT')
-    62   1045.1 MiB      0.0 MiB           1       if not os.path.exists(new_dir):
-    63   1045.1 MiB      0.0 MiB           1           os.mkdir(new_dir)
+    61   1036.8 MiB      0.0 MiB           1       new_dir = os.path.join(save_dir, 'BERT')
+    62   1036.8 MiB      0.0 MiB           1       if not os.path.exists(new_dir):
+    63   1036.8 MiB      0.0 MiB           1           os.mkdir(new_dir)
     64                                         
-    65   1083.0 MiB     37.9 MiB           1       seen, unseen, temp = create_bert_embeddings.create_embeddings(file_path, device_list, new_dir, data_path, group_option, word_embedding_option, window_size, slide_length, vector_size)
-    66   1083.0 MiB      0.0 MiB           1       if temp is not None:
-    67   1083.0 MiB      0.0 MiB           1           bert_embeddings_creation_time = time.time() - start_time
-    68   1083.0 MiB      0.0 MiB           1           bert_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
+    65   1079.5 MiB     42.7 MiB           1       seen, unseen, temp = create_bert_embeddings.create_embeddings(file_path, device_list, new_dir, data_path, group_option, word_embedding_option, window_size, slide_length, vector_size)
+    66   1079.5 MiB      0.0 MiB           1       if temp is not None:
+    67   1079.5 MiB      0.0 MiB           1           bert_embeddings_creation_time = time.time() - start_time
+    68   1079.5 MiB      0.0 MiB           1           bert_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
     69                                             else:
     70                                                 bert_embeddings_creation_time = 0
     71                                                 bert_embeddings_creation_mem_usage = 0
     72                                         
-    73   1083.0 MiB      0.0 MiB           1       total = seen + unseen
-    74   1083.0 MiB      0.0 MiB           1       if total == 0:
+    73   1079.5 MiB      0.0 MiB           1       total = seen + unseen
+    74   1079.5 MiB      0.0 MiB           1       if total == 0:
     75                                                 total = seen_ft + unseen_ft
     76                                                 unseen = unseen_ft
     77                                                 seen = seen_ft
     78                                         
     79                                             # Per flow!
-    80   1083.0 MiB      0.0 MiB           1       if total != 0:
+    80   1079.5 MiB      0.0 MiB           1       if total != 0:
     81                                                 # times = (fast_text_training_time/unseen, fast_text_embeddings_creation_time/total, bert_embeddings_creation_time/total)
     82                                                 # memories = (fast_text_training_mem_usage/unseen, fast_text_embeddings_creation_mem_usage/total, bert_embeddings_creation_mem_usage/total)
-    83   1083.0 MiB      0.0 MiB           1           times = (0, 0, bert_embeddings_creation_time/total)
-    84   1083.0 MiB      0.0 MiB           1           memories = (0, 0, bert_embeddings_creation_mem_usage/total)
+    83   1079.5 MiB      0.0 MiB           1           times = (0, 0, bert_embeddings_creation_time/total)
+    84   1079.5 MiB      0.0 MiB           1           memories = (0, 0, bert_embeddings_creation_mem_usage/total)
     85                                         
     86                                             else:
     87                                                 times = (0, 0, 0)
     88                                                 memories = times
     89                                         
-    90   1083.0 MiB      0.0 MiB           1       return times, memories
+    90   1079.5 MiB      0.0 MiB           1       return times, memories
 
 
 Creating embeddings at vector size: 512
@@ -218,31 +218,31 @@ Filename: /home/iotresearch/saad/FastTextExp/thesis_b/main_create_all_embeddings
 
 Line #    Mem usage    Increment  Occurrences   Line Contents
 =============================================================
-     9   1082.8 MiB   1082.8 MiB           1   @profile
+     9   1079.2 MiB   1079.2 MiB           1   @profile
     10                                         def main(device_low, device_high, save_dir, data_path, group_option, word_embedding_option, window_size, slide_length, vector_size = 768):
     11                                             # Directory path to read files from
-    12   1082.8 MiB      0.0 MiB           1       file_path = r'/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix'
+    12   1079.2 MiB      0.0 MiB           1       file_path = r'/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix'
     13                                         
-    14   1082.8 MiB      0.0 MiB           1       if not os.path.exists(file_path):
+    14   1079.2 MiB      0.0 MiB           1       if not os.path.exists(file_path):
     15                                                 file_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T1\Thesis A\Data'
     16                                         
     17                                             # List of files to exclude
-    18   1082.8 MiB      0.0 MiB           1       exclusion_list = ['sony_network_camera.json', 'mouse_computer_room_hub.json', 'planex_camera_one_shot!.json']
+    18   1079.2 MiB      0.0 MiB           1       exclusion_list = ['sony_network_camera.json', 'mouse_computer_room_hub.json', 'planex_camera_one_shot!.json']
     19                                         
     20                                             # Get a list of all devices in the directory
-    21   1082.8 MiB      0.0 MiB           1       all_devices = os.listdir(file_path)
+    21   1079.2 MiB      0.0 MiB           1       all_devices = os.listdir(file_path)
     22                                             # Filter out devices that are in the exclusion list
-    23   1082.8 MiB      0.0 MiB          28       filtered_devices = [device for device in all_devices if device not in exclusion_list]
+    23   1079.2 MiB      0.0 MiB          28       filtered_devices = [device for device in all_devices if device not in exclusion_list]
     24                                             # Sort devices by file size
-    25   1082.8 MiB      0.0 MiB          45       devices_sorted = sorted(filtered_devices, key=lambda device: os.path.getsize(os.path.join(file_path, device)))
+    25   1079.2 MiB      0.0 MiB          45       devices_sorted = sorted(filtered_devices, key=lambda device: os.path.getsize(os.path.join(file_path, device)))
     26                                             # Select the five smallest devices from the sorted list
-    27   1082.8 MiB      0.0 MiB           1       device_list = devices_sorted[device_low:device_high]
-    28   1082.8 MiB      0.0 MiB           1       print(device_list)
+    27   1079.2 MiB      0.0 MiB           1       device_list = devices_sorted[device_low:device_high]
+    28   1079.2 MiB      0.0 MiB           1       print(device_list)
     29                                         
     30                                             # Train the FastText model and create it's embeddings
-    31   1082.8 MiB      0.0 MiB           1       gc.collect()
-    32   1082.8 MiB      0.0 MiB           1       start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
-    33   1082.8 MiB      0.0 MiB           1       start_time = time.time()
+    31   1079.0 MiB     -0.2 MiB           1       gc.collect()
+    32   1079.0 MiB      0.0 MiB           1       start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
+    33   1079.0 MiB      0.0 MiB           1       start_time = time.time()
     34                                         
     35                                             # new_dir = os.path.join(save_dir, 'FastText')
     36                                             # if not os.path.exists(new_dir):
@@ -266,40 +266,40 @@ Line #    Mem usage    Increment  Occurrences   Line Contents
     54                                         
     55                                             # Create BERT embeddings using pretrained model
     56                                             # devices_lengths = [seen, unseen]
-    57   1082.8 MiB      0.0 MiB           1       seen_ft = 0
-    58   1082.8 MiB      0.0 MiB           1       unseen_ft = 0
+    57   1079.0 MiB      0.0 MiB           1       seen_ft = 0
+    58   1079.0 MiB      0.0 MiB           1       unseen_ft = 0
     59                                         
     60                                         
-    61   1082.8 MiB      0.0 MiB           1       new_dir = os.path.join(save_dir, 'BERT')
-    62   1082.8 MiB      0.0 MiB           1       if not os.path.exists(new_dir):
-    63   1082.8 MiB      0.0 MiB           1           os.mkdir(new_dir)
+    61   1079.0 MiB      0.0 MiB           1       new_dir = os.path.join(save_dir, 'BERT')
+    62   1079.0 MiB      0.0 MiB           1       if not os.path.exists(new_dir):
+    63   1079.0 MiB      0.0 MiB           1           os.mkdir(new_dir)
     64                                         
-    65   1205.8 MiB    123.1 MiB           1       seen, unseen, temp = create_bert_embeddings.create_embeddings(file_path, device_list, new_dir, data_path, group_option, word_embedding_option, window_size, slide_length, vector_size)
-    66   1205.8 MiB      0.0 MiB           1       if temp is not None:
-    67   1205.8 MiB      0.0 MiB           1           bert_embeddings_creation_time = time.time() - start_time
-    68   1205.8 MiB      0.0 MiB           1           bert_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
+    65   1197.8 MiB    118.8 MiB           1       seen, unseen, temp = create_bert_embeddings.create_embeddings(file_path, device_list, new_dir, data_path, group_option, word_embedding_option, window_size, slide_length, vector_size)
+    66   1197.8 MiB      0.0 MiB           1       if temp is not None:
+    67   1197.8 MiB      0.0 MiB           1           bert_embeddings_creation_time = time.time() - start_time
+    68   1197.8 MiB      0.0 MiB           1           bert_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
     69                                             else:
     70                                                 bert_embeddings_creation_time = 0
     71                                                 bert_embeddings_creation_mem_usage = 0
     72                                         
-    73   1205.8 MiB      0.0 MiB           1       total = seen + unseen
-    74   1205.8 MiB      0.0 MiB           1       if total == 0:
+    73   1197.8 MiB      0.0 MiB           1       total = seen + unseen
+    74   1197.8 MiB      0.0 MiB           1       if total == 0:
     75                                                 total = seen_ft + unseen_ft
     76                                                 unseen = unseen_ft
     77                                                 seen = seen_ft
     78                                         
     79                                             # Per flow!
-    80   1205.8 MiB      0.0 MiB           1       if total != 0:
+    80   1197.8 MiB      0.0 MiB           1       if total != 0:
     81                                                 # times = (fast_text_training_time/unseen, fast_text_embeddings_creation_time/total, bert_embeddings_creation_time/total)
     82                                                 # memories = (fast_text_training_mem_usage/unseen, fast_text_embeddings_creation_mem_usage/total, bert_embeddings_creation_mem_usage/total)
-    83   1205.8 MiB      0.0 MiB           1           times = (0, 0, bert_embeddings_creation_time/total)
-    84   1205.8 MiB      0.0 MiB           1           memories = (0, 0, bert_embeddings_creation_mem_usage/total)
+    83   1197.8 MiB      0.0 MiB           1           times = (0, 0, bert_embeddings_creation_time/total)
+    84   1197.8 MiB      0.0 MiB           1           memories = (0, 0, bert_embeddings_creation_mem_usage/total)
     85                                         
     86                                             else:
     87                                                 times = (0, 0, 0)
     88                                                 memories = times
     89                                         
-    90   1205.8 MiB      0.0 MiB           1       return times, memories
+    90   1197.8 MiB      0.0 MiB           1       return times, memories
 
 
 Creating embeddings at vector size: 768
@@ -319,31 +319,31 @@ Filename: /home/iotresearch/saad/FastTextExp/thesis_b/main_create_all_embeddings
 
 Line #    Mem usage    Increment  Occurrences   Line Contents
 =============================================================
-     9   1205.8 MiB   1205.8 MiB           1   @profile
+     9   1197.8 MiB   1197.8 MiB           1   @profile
     10                                         def main(device_low, device_high, save_dir, data_path, group_option, word_embedding_option, window_size, slide_length, vector_size = 768):
     11                                             # Directory path to read files from
-    12   1205.8 MiB      0.0 MiB           1       file_path = r'/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix'
+    12   1197.8 MiB      0.0 MiB           1       file_path = r'/home/iotresearch/saad/data/KDDI-IoT-2019/ipfix'
     13                                         
-    14   1205.8 MiB      0.0 MiB           1       if not os.path.exists(file_path):
+    14   1197.8 MiB      0.0 MiB           1       if not os.path.exists(file_path):
     15                                                 file_path = r'C:\Users\Saad Khan\OneDrive - UNSW\University\5th Yr\T1\Thesis A\Data'
     16                                         
     17                                             # List of files to exclude
-    18   1205.8 MiB      0.0 MiB           1       exclusion_list = ['sony_network_camera.json', 'mouse_computer_room_hub.json', 'planex_camera_one_shot!.json']
+    18   1197.8 MiB      0.0 MiB           1       exclusion_list = ['sony_network_camera.json', 'mouse_computer_room_hub.json', 'planex_camera_one_shot!.json']
     19                                         
     20                                             # Get a list of all devices in the directory
-    21   1205.8 MiB      0.0 MiB           1       all_devices = os.listdir(file_path)
+    21   1197.8 MiB      0.0 MiB           1       all_devices = os.listdir(file_path)
     22                                             # Filter out devices that are in the exclusion list
-    23   1205.8 MiB      0.0 MiB          28       filtered_devices = [device for device in all_devices if device not in exclusion_list]
+    23   1197.8 MiB      0.0 MiB          28       filtered_devices = [device for device in all_devices if device not in exclusion_list]
     24                                             # Sort devices by file size
-    25   1205.8 MiB      0.0 MiB          45       devices_sorted = sorted(filtered_devices, key=lambda device: os.path.getsize(os.path.join(file_path, device)))
+    25   1197.8 MiB      0.0 MiB          45       devices_sorted = sorted(filtered_devices, key=lambda device: os.path.getsize(os.path.join(file_path, device)))
     26                                             # Select the five smallest devices from the sorted list
-    27   1205.8 MiB      0.0 MiB           1       device_list = devices_sorted[device_low:device_high]
-    28   1205.8 MiB      0.0 MiB           1       print(device_list)
+    27   1197.8 MiB      0.0 MiB           1       device_list = devices_sorted[device_low:device_high]
+    28   1197.8 MiB      0.0 MiB           1       print(device_list)
     29                                         
     30                                             # Train the FastText model and create it's embeddings
-    31   1205.8 MiB      0.0 MiB           1       gc.collect()
-    32   1205.8 MiB      0.0 MiB           1       start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
-    33   1205.8 MiB      0.0 MiB           1       start_time = time.time()
+    31   1197.8 MiB      0.0 MiB           1       gc.collect()
+    32   1197.8 MiB      0.0 MiB           1       start_memory = memory_usage(-1, interval=0.1, include_children=True)[0]
+    33   1197.8 MiB      0.0 MiB           1       start_time = time.time()
     34                                         
     35                                             # new_dir = os.path.join(save_dir, 'FastText')
     36                                             # if not os.path.exists(new_dir):
@@ -367,81 +367,81 @@ Line #    Mem usage    Increment  Occurrences   Line Contents
     54                                         
     55                                             # Create BERT embeddings using pretrained model
     56                                             # devices_lengths = [seen, unseen]
-    57   1205.8 MiB      0.0 MiB           1       seen_ft = 0
-    58   1205.8 MiB      0.0 MiB           1       unseen_ft = 0
+    57   1197.8 MiB      0.0 MiB           1       seen_ft = 0
+    58   1197.8 MiB      0.0 MiB           1       unseen_ft = 0
     59                                         
     60                                         
-    61   1205.8 MiB      0.0 MiB           1       new_dir = os.path.join(save_dir, 'BERT')
-    62   1205.8 MiB      0.0 MiB           1       if not os.path.exists(new_dir):
-    63   1205.8 MiB      0.0 MiB           1           os.mkdir(new_dir)
+    61   1197.8 MiB      0.0 MiB           1       new_dir = os.path.join(save_dir, 'BERT')
+    62   1197.8 MiB      0.0 MiB           1       if not os.path.exists(new_dir):
+    63   1197.8 MiB      0.0 MiB           1           os.mkdir(new_dir)
     64                                         
-    65   1320.0 MiB    114.2 MiB           1       seen, unseen, temp = create_bert_embeddings.create_embeddings(file_path, device_list, new_dir, data_path, group_option, word_embedding_option, window_size, slide_length, vector_size)
-    66   1320.0 MiB      0.0 MiB           1       if temp is not None:
-    67   1320.0 MiB      0.0 MiB           1           bert_embeddings_creation_time = time.time() - start_time
-    68   1320.0 MiB      0.0 MiB           1           bert_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
+    65   1367.6 MiB    169.8 MiB           1       seen, unseen, temp = create_bert_embeddings.create_embeddings(file_path, device_list, new_dir, data_path, group_option, word_embedding_option, window_size, slide_length, vector_size)
+    66   1367.6 MiB      0.0 MiB           1       if temp is not None:
+    67   1367.6 MiB      0.0 MiB           1           bert_embeddings_creation_time = time.time() - start_time
+    68   1367.6 MiB      0.0 MiB           1           bert_embeddings_creation_mem_usage = memory_usage(-1, interval=0.1, include_children=True)[0] - start_memory
     69                                             else:
     70                                                 bert_embeddings_creation_time = 0
     71                                                 bert_embeddings_creation_mem_usage = 0
     72                                         
-    73   1320.0 MiB      0.0 MiB           1       total = seen + unseen
-    74   1320.0 MiB      0.0 MiB           1       if total == 0:
+    73   1367.6 MiB      0.0 MiB           1       total = seen + unseen
+    74   1367.6 MiB      0.0 MiB           1       if total == 0:
     75                                                 total = seen_ft + unseen_ft
     76                                                 unseen = unseen_ft
     77                                                 seen = seen_ft
     78                                         
     79                                             # Per flow!
-    80   1320.0 MiB      0.0 MiB           1       if total != 0:
+    80   1367.6 MiB      0.0 MiB           1       if total != 0:
     81                                                 # times = (fast_text_training_time/unseen, fast_text_embeddings_creation_time/total, bert_embeddings_creation_time/total)
     82                                                 # memories = (fast_text_training_mem_usage/unseen, fast_text_embeddings_creation_mem_usage/total, bert_embeddings_creation_mem_usage/total)
-    83   1320.0 MiB      0.0 MiB           1           times = (0, 0, bert_embeddings_creation_time/total)
-    84   1320.0 MiB      0.0 MiB           1           memories = (0, 0, bert_embeddings_creation_mem_usage/total)
+    83   1367.6 MiB      0.0 MiB           1           times = (0, 0, bert_embeddings_creation_time/total)
+    84   1367.6 MiB      0.0 MiB           1           memories = (0, 0, bert_embeddings_creation_mem_usage/total)
     85                                         
     86                                             else:
     87                                                 times = (0, 0, 0)
     88                                                 memories = times
     89                                         
-    90   1320.0 MiB      0.0 MiB           1       return times, memories
+    90   1367.6 MiB      0.0 MiB           1       return times, memories
 
 
-[((0, 0, 0.018163993032350823), (0, 0, 0.004682161949851325)), ((0, 0, 0.018292371579974712), (0, 0, 0.0007998837491300956)), ((0, 0, 0.035809956079804535), (0, 0, 0.002595050243573251)), ((0, 0, 0.07495668594130113), (0, 0, 0.0024081361110525317))]
+[((0, 0, 0.018199450469066805), (0, 0, 0.004536189343933866)), ((0, 0, 0.018383516993108646), (0, 0, 0.0009003016986861807)), ((0, 0, 0.035899937480933834), (0, 0, 0.002505917986461123)), ((0, 0, 0.07081300773022083), (0, 0, 0.003580859597418756))]
 -----------------------
 Stats for category: 128
 Times (sec):
 FastText Training: 0
 FastText: 0
-BERT: 0.018163993032350823
+BERT: 0.018199450469066805
 Memories (MB):
 FastText Training: 0
 FastText: 0
-BERT: 0.004682161949851325
+BERT: 0.004536189343933866
 -----------------------
 Stats for category: 256
 Times (sec):
 FastText Training: 0
 FastText: 0
-BERT: 0.018292371579974712
+BERT: 0.018383516993108646
 Memories (MB):
 FastText Training: 0
 FastText: 0
-BERT: 0.0007998837491300956
+BERT: 0.0009003016986861807
 -----------------------
 Stats for category: 512
 Times (sec):
 FastText Training: 0
 FastText: 0
-BERT: 0.035809956079804535
+BERT: 0.035899937480933834
 Memories (MB):
 FastText Training: 0
 FastText: 0
-BERT: 0.002595050243573251
+BERT: 0.002505917986461123
 -----------------------
 Stats for category: 768
 Times (sec):
 FastText Training: 0
 FastText: 0
-BERT: 0.07495668594130113
+BERT: 0.07081300773022083
 Memories (MB):
 FastText Training: 0
 FastText: 0
-BERT: 0.0024081361110525317
+BERT: 0.003580859597418756
 -----------------------

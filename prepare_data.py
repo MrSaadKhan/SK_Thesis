@@ -63,6 +63,7 @@ def prepare_data(file_path, group_option=0, time_group=0, num2word_option=0):
 
     
     def replace_words_in_dict_list(data_list, word_map):
+        # print(data_list)
         updated_list = []
         for data_dict in data_list:
             new_dict = {}
