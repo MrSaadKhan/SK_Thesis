@@ -212,8 +212,8 @@ def main(vector_list, device_range, vector_path, group_option, window_size, slid
     else:
         group_option = "Grouped"
 
-    embed_options = ["bert_embeddings", "fast_text_embeddings"]  # Embedding options
-    more_options = ["BERT", "FastText"]
+    embed_options = ["bert_embeddings", "fast_text_embeddings", "gpt2_embeddings"]  # Embedding options
+    more_options = ["BERT", "FastText", "GPT2"]
 
     accuracy_list = []  # List to store accuracies
     print(vector_list)
@@ -248,6 +248,10 @@ def main(vector_list, device_range, vector_path, group_option, window_size, slid
                 if option.startswith("fast_text_embeddings"):
                     fast_text_embeddings_classification_time = time.time() - start_time
                     fast_text_embeddings_classification_mem_usage = memory
+
+                if option.startswith("gpt2_embeddings"):
+                    gpt2_embeddings_classification_time = time.time() - start_time
+                    gpt2_embeddings_classification_mem_usage = memory
 
             else:
                 print(f"{embed_name} does not exist!")
